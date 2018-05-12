@@ -1,14 +1,19 @@
 
 class SearchTreeNode:
     numberOfNodesCreated = 0
-    def __init__(self, city, location, parent, neighbours):
+
+    def __init__(self, city, location, parent, neighbours, depth = 1):
         self.city = city
         self.cityCoordinates = location
         self.parent = parent
         self.neighbours = neighbours
         self.children = []
+        self.depth = 0
 
     def getCity(self):
+        return self.city
+
+    def getName(self):
         return self.city
 
     def getCoords(self):
@@ -22,6 +27,9 @@ class SearchTreeNode:
 
     def setParent(self, parent):
         self.parent = parent
+
+    def getDepth(self):
+        return self.depth
 
     def addChild(self, child):
         self.children.append(child)

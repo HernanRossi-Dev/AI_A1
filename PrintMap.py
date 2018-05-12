@@ -1,8 +1,9 @@
 import tkinter as tk
 
+
 class PrintMap(tk.Tk):
 
-    def __init__(self, mapping, start, goal, cityLocations, *args, **kwargs):
+    def __init__(self, mapping, start, goal, cityLocations, searchSolution, allCitiesVisited, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.cities = ['A', 'B', 'C', 'D', 'E', 'F',
                        'G', 'H', 'I', 'J', 'K', 'L',
@@ -13,6 +14,8 @@ class PrintMap(tk.Tk):
         self.startCity = start
         self.goalCity = goal
         self.cityLocations = cityLocations
+        self.searchSolution = searchSolution
+        self.allCitiesVisited = allCitiesVisited
         self.canvas = tk.Canvas(self, width=1000, height=1000, borderwidth=0, highlightthickness=0)
         self.canvas.pack(side="top", fill="both", expand="true")
         self.rows = 100
@@ -31,6 +34,7 @@ class PrintMap(tk.Tk):
                 self.cell[row, column] = self.canvas.create_rectangle(x1, y1, x2, y2, fill='#515c6d', tags="rect")
         self.printMap()
 
+
     def printMap(self):
         for currentCity in self.cities:
             currentCityCoordinates = self.cityLocations[currentCity]
@@ -38,13 +42,35 @@ class PrintMap(tk.Tk):
                 neighborCityCoordinates = self.cityLocations[neighborCity]
                 self.canvas.create_line(currentCityCoordinates[0] * 10, currentCityCoordinates[1] * 10,
                                         neighborCityCoordinates[0] * 10, neighborCityCoordinates[1] * 10,
-                                        fill='#C1AA9D', width=1)
-        for city in self.cityLocations:
-            loc = self.cityLocations[city]
-            self.canvas.create_text(loc[0] * 10, loc[1] * 10, anchor=tk.W, font="Arial", text=city, fill="white")
+                                        fill='#a8a6a6', width=1)
+
         startCityLocation = self.cityLocations[self.startCity]
         goalCityLocation = self.cityLocations[self.goalCity]
         self.canvas.create_oval(startCityLocation[0] * 10 - 25, startCityLocation[1] * 10 - 25,
                                 startCityLocation[0] * 10 + 30, startCityLocation[1] * 10 + 30, outline='#46b400')
         self.canvas.create_oval(goalCityLocation[0] * 10 - 25, goalCityLocation[1] * 10 - 25,
                                 goalCityLocation[0] * 10 + 30, goalCityLocation[1] * 10 + 30, outline='#c10000')
+        self.printAllCitiesVisited()
+        self.printSearchSolution()
+        for city in self.cityLocations:
+            loc = self.cityLocations[city]
+            self.canvas.create_text(loc[0] * 10, loc[1] * 10, anchor=tk.W, font="Arial", text=city, fill="white")
+
+    def printSearchSolution(self):
+        toCity = False
+        for city in self.searchSolution:
+            if toCity:
+                fromCity = city
+                fromCityLocation = self.cityLocations[fromCity]
+                toCityLocation = self.cityLocations[toCity]
+                self.canvas.create_line(fromCityLocation[0] * 10, fromCityLocation[1] * 10, toCityLocation[0] * 10,
+                                        toCityLocation[1] * 10, fill='#017720', width=3)
+            toCity = city
+
+    def printAllCitiesVisited(self):
+
+        for fromCity, toCity in self.allCitiesVisited:
+            fromCityLocation = self.cityLocations[fromCity]
+            toCityLocation = self.cityLocations[toCity]
+            self.canvas.create_line(fromCityLocation[0] * 10, fromCityLocation[1] * 10, toCityLocation[0] * 10,
+                                        toCityLocation[1] * 10, fill='#a36501', width=3)

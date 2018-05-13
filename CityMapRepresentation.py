@@ -1,10 +1,10 @@
 from random import *
 import math
-import queue
 from PrintMap import PrintMap
-from SearchTreeNode import SearchTreeNode
 from DepthFirstSearch import DepthFirstSearch
-import time
+from BreadthFirstSearch import BreadthFirstSearch
+from IterativeDeepeningSearch import IterativeDeepeningSearch
+import sys
 
 #     NorthWest region is :
 #                           top left corner = (0, 100)          top right corner = (50, 100)
@@ -27,7 +27,6 @@ import time
 #     create dictionary of city location pairs
 
 class CityMapRepresentation:
-
 
     def __init__(self, *args, **kwargs):
         self.cities = ['A', 'B', 'C', 'D', 'E', 'F',
@@ -76,7 +75,6 @@ class CityMapRepresentation:
             while self.checkDistancesToAllCities(tupTemp):
                 tupTemp = (randrange(0, 100, 1), randrange(0, 100, 1))
             self.cityLocations[city] = tupTemp
-
         for i in range(0, 25):
             city = self.cities[i]
             cityLocation = self.cityLocations[city]
@@ -97,14 +95,11 @@ class CityMapRepresentation:
                 distancePair = (neighbor, distance)
 
                 listOfDistancesNeighbourPairs.append(distancePair)
-
             shortlistOfCities = sorted(listOfDistancesNeighbourPairs, key=lambda k: float(k[1]))
             shortlistOfCities = shortlistOfCities[0:5]
             shuffle(shortlistOfCities)
-
             numberOfNeigboursAlreadyConnected = len(self.mappingCitiesToConnectedNeighbours[city])
             upperRange = randrange(1, 5 - numberOfNeigboursAlreadyConnected, 1)
-            # upperRange = upperRange - numberOfNeighbours
             finalList = shortlistOfCities[0:upperRange]
 
             for connectNeighbour in finalList:
@@ -114,30 +109,89 @@ class CityMapRepresentation:
                     self.mappingCitiesToConnectedNeighbours[city].append(connectNeighbour[0])
                     self.mappingCitiesToConnectedNeighbours[connectNeighbour[0]].append(city)
 
-        #             THIS WAS  FOR CALCULTING AVERAGE NUMBER OF BRANCHES
-        # sumNumNeighbours = 0
-        # for cityWithNeighbours in self.mappingCitiesToConnectedNeighbours:
-        #     # print(cityWithNeighbours, self.mappingCitiesToConnectedNeighbours[cityWithNeighbours])
-        #     currentNumNeighbours = len(self.mappingCitiesToConnectedNeighbours[cityWithNeighbours])
-        #     sumNumNeighbours += currentNumNeighbours
-        # averageNumBranches = sumNumNeighbours /26
-        # print('The average Number of branches is : ')
-        # print(averageNumBranches)
-        # return averageNumBranches
+        # if len(sys.argv) < 2:
+        #     print('Must supply type of search to perform')
+        #     exit(0)
+        # if sys.argv[1] == 'DFS':
+        #     runDFS = DepthFirstSearch(self.startCity, self.goalCity, self.cityLocations, self.mappingCitiesToConnectedNeighbours)
+        #     runDFS.depthFirstSearch()
+        #     self.allActionsTaken = runDFS.allActionsTaken
+        #     self.searchSolution = runDFS.searchSolution
+        # elif sys.argv[1] == 'IDS':
+        #     runIDS = IterativeDeepeningSearch(self.startCity, self.goalCity, self.cityLocations, self.mappingCitiesToConnectedNeighbours)
+        #     runIDS.iterativeDS()
+        #     self.allActionsTaken = runIDS.allActionsTaken
+        #     self.searchSolution = runIDS.searchSolution
+        # elif sys.argv[1] == 'BFS':
+        #     runBFS = BreadthFirstSearch(self.startCity, self.goalCity, self.cityLocations, self.mappingCitiesToConnectedNeighbours)
+        #     runBFS.breadthFirstSearch()
+        #     self.allActionsTaken = runBFS.allActionsTaken
+        #     self.searchSolution = runBFS.searchSolution
+        # elif sys.argv[1] =='IDS100':
+        #     numberProbsSolved = 0
+        #     sumNodesCreated = 0
+        #     sumNodesVisited = 0
+        #     sumSolutionLength = 0
+        #     for i in range(0, 99):
+        #         runIDS = IterativeDeepeningSearch(self.startCity, self.goalCity, self.cityLocations,
+        #                                           self.mappingCitiesToConnectedNeighbours)
+        #         runIDS.iterativeDS()
+        #         numberNodesCreated = runIDS.numberOfNodesCreated
+        #         numberNodesVisited = runIDS.numberOfCitiesVisited
+        #         solutionFound = runIDS.solutionFound
+        #         solutionPath = runIDS.searchSolution
+        #         solutionLength = len(solutionPath)
+        #         if solutionFound:
+        #             numberProbsSolved += 1
+        #         sumNodesCreated += numberNodesCreated
+        #         sumNodesVisited += numberNodesVisited
+        #         sumSolutionLength += solutionLength
+        #
+        #
+        #     aveNodesCreated = sumNodesCreated / 100
+        #     aveNodesVisited = sumNodesVisited / 100
+        #     aveSolutonLength = sumSolutionLength / 100
+        #     print('Average Nodes Visited: ', aveNodesVisited)
+        #     print('Average Nodes Created: ', aveNodesCreated)
+        #     print('Average Solution Length: ', aveSolutonLength)
+        #     print('Number problems Solved: ', numberProbsSolved)
+        #
+        # elif sys.argv[1] =='DFS100':
+        #     numberProbsSolved = 0
+        #     sumNodesCreated = 0
+        #     sumNodesVisited = 0
+        #     sumSolutionLength = 0
+        #     for i in range(0, 99):
+        #         runDFS = DepthFirstSearch(self.startCity, self.goalCity, self.cityLocations,
+        #                                   self.mappingCitiesToConnectedNeighbours)
+        #         runDFS.depthFirstSearch()
+        #         numberNodesCreated = runDFS.numberOfNodesCreated
+        #         numberNodesVisited = runDFS.numberOfCitiesVisited
+        #         solutionFound = runDFS.solutionFound
+        #         solutionPath = runDFS.searchSolution
+        #         solutionLength = len(solutionPath)
+        #         if solutionFound:
+        #             numberProbsSolved += 1
+        #         sumNodesCreated += numberNodesCreated
+        #         sumNodesVisited += numberNodesVisited
+        #         sumSolutionLength += solutionLength
+        #
+        #
+        #     aveNodesCreated = sumNodesCreated / 100
+        #     aveNodesVisited = sumNodesVisited / 100
+        #     aveSolutonLength = sumSolutionLength / 100
+        #     print('Average Nodes Visited: ', aveNodesVisited)
+        #     print('Average Nodes Created: ', aveNodesCreated)
+        #     print('Average Solution Length: ', aveSolutonLength)
+        #     print('Number problems Solved: ', numberProbsSolved)
 
-        # self.BreadthFirstSearch()
-        # self.DepthFirstSearch()
-        runDFS = DepthFirstSearch(self.startCity, self.goalCity,
-                                  self.cityLocations, self.mappingCitiesToConnectedNeighbours)
 
-        runDFS.depthFirstSearch()
-        self.allActionsTaken = runDFS.allActionsTaken
-        self.searchSolution = runDFS.searchSolution
-
-        self.printMap = PrintMap(self.mappingCitiesToConnectedNeighbours, self.startCity, self.goalCity,
-                                  self.cityLocations, self.searchSolution, self.allActionsTaken)
-        self.printMap.mainloop()
-
+        # if len(sys.argv) < 3:
+        #     print('Not printing map')
+        # elif sys.argv[2] == 'print':
+        #     self.printMap = PrintMap(self.mappingCitiesToConnectedNeighbours, self.startCity, self.goalCity,
+        #                               self.cityLocations, self.searchSolution, self.allActionsTaken)
+        #     self.printMap.mainloop()
 
     def checkDistancesToAllCities(self, cityLocation):
         for neighbor, neighborLocation in self.cityLocations.items():
@@ -149,103 +203,13 @@ class CityMapRepresentation:
                 return True
         return False
 
-
-    # def DepthFirstSearch(self):
-    #     visited = []
-    #     startNode = SearchTreeNode(self.startCity, self.cityLocations[self.startCity], False,
-    #                                self.mappingCitiesToConnectedNeighbours[self.startCity])
-    #     stack = [startNode]
-    #     numberOfNodesCreated = 1
-    #     numberOfCitiesVisited = 0
-    #     while stack:
-    #         city = stack.pop()
-    #         cityName = city.getName()
-    #         if city.getParent():
-    #             self.allActionsTaken.append([cityName, city.getParent().getCity()])
-    #         if cityName == self.goalCity:
-    #             numberOfCitiesVisited += 1
-    #             print('Visiting Goal', cityName)
-    #             pathToGoal = []
-    #             while city.getParent():
-    #                 pathToGoal.append(city.getName())
-    #                 city = city.getParent()
-    #             pathToGoal.append(city.getName())
-    #             pathToGoal.reverse()
-    #             self.searchSolution = pathToGoal
-    #             print('Number of nodes created')
-    #             print(numberOfNodesCreated)
-    #             print('Number of Nodes Visited')
-    #             print(numberOfCitiesVisited)
-    #             print('Path to goal found: ')
-    #             print(pathToGoal)
-    #             return pathToGoal
-    #         if cityName not in visited:
-    #             print('Visiting ', city.getCity())
-    #             visited.append(cityName)
-    #             numberOfCitiesVisited += 1
-    #             cityNeighbours = city.getNeighbours()
-    #             for neighbour in cityNeighbours:
-    #                 newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
-    #                                            self.mappingCitiesToConnectedNeighbours[neighbour])
-    #                 stack.append(newNode)
-    #                 numberOfNodesCreated += 1
-    #         else:
-    #             # already visited
-    #             continue
-    #     print('No solution Found.')
-    #     return []
-
-
-    def BreadthFirstSearch(self):
-        citiesVisited = {
-            'A': False, 'B': False, 'C': False, 'D': False, 'E': False, 'F': False,
-            'G': False, 'H': False, 'I': False, 'J': False, 'K': False, 'L': False,
-            'M': False, 'N': False, 'O': False, 'P': False, 'Q': False, 'R': False,
-            'S': False, 'T': False, 'U': False, 'V': False, 'W': False, 'X': False,
-            'Y': False, 'Z': False
-        }
-        citiesToVisitQueue = queue.Queue()
-        startCity = self.startCity
-
-        startNode = SearchTreeNode(startCity, self.cityLocations[startCity], False, self.mappingCitiesToConnectedNeighbours[startCity])
-        numberOfNodesCreated = 1
-        citiesToVisitQueue.put(startNode)
-        numberOfNodesVisited = 0
-        while citiesToVisitQueue.qsize() != 0:
-            visitCity = citiesToVisitQueue.get()
-
-            if visitCity.getParent():
-                self.allActionsTaken.append([visitCity.getCity(), visitCity.getParent().getCity()])
-
-            if visitCity.getCity() == self.goalCity:
-                numberOfNodesVisited += 1
-                print('Visiting Goal', visitCity.getCity())
-                pathToGoal = []
-                while visitCity.getParent():
-                    pathToGoal.append(visitCity.getCity())
-                    visitCity = visitCity.getParent()
-                pathToGoal.append(visitCity.getCity())
-                pathToGoal.reverse()
-                self.searchSolution = pathToGoal
-                print('Number of nodes created')
-                print(numberOfNodesCreated)
-                print('Number of Nodes Visited')
-                print(numberOfNodesVisited)
-                print('Path to goal found: ')
-                print(pathToGoal)
-                return pathToGoal
-            if citiesVisited[visitCity.getCity()]:
-                continue
-            else:
-                numberOfNodesVisited += 1
-                print('Visiting ', visitCity.getCity())
-                citiesVisited[visitCity.getCity()] = True
-                listOfNeighbours = visitCity.getNeighbours()
-                for neighbour in listOfNeighbours:
-                    newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], visitCity, self.mappingCitiesToConnectedNeighbours[neighbour])
-                    numberOfNodesCreated += 1
-                    citiesToVisitQueue.put(newNode)
-
-        # No solution found return an empty path
-        print('No solution Found')
-        return []
+    def calcAverageBranches(self):
+        sumNumNeighbours = 0
+        for cityWithNeighbours in self.mappingCitiesToConnectedNeighbours:
+            # print(cityWithNeighbours, self.mappingCitiesToConnectedNeighbours[cityWithNeighbours])
+            currentNumNeighbours = len(self.mappingCitiesToConnectedNeighbours[cityWithNeighbours])
+            sumNumNeighbours += currentNumNeighbours
+        averageNumBranches = sumNumNeighbours /26
+        print('The average Number of branches is : ')
+        print(averageNumBranches)
+        return averageNumBranches

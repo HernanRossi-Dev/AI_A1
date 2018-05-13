@@ -68,9 +68,19 @@ class PrintMap(tk.Tk):
             toCity = city
 
     def printAllCitiesVisited(self):
-
+        actionNumber = 0
+        citiesTagged = {}
         for fromCity, toCity in self.allCitiesVisited:
             fromCityLocation = self.cityLocations[fromCity]
             toCityLocation = self.cityLocations[toCity]
+            actionNumber += 1
+            if fromCity in citiesTagged:
+                citiesTagged[fromCity] += 15
+            else:
+                citiesTagged[fromCity] = 25
+
+            outputString = 'Move: ' + str(actionNumber) + ' ' + fromCity + ' -> ' + toCity
             self.canvas.create_line(fromCityLocation[0] * 10, fromCityLocation[1] * 10, toCityLocation[0] * 10,
                                         toCityLocation[1] * 10, fill='#a36501', width=3)
+            self.canvas.create_text((fromCityLocation[0] * 10),  fromCityLocation[1] * 10 + 20 + citiesTagged[fromCity], anchor=tk.W, font="Arial", text=outputString, fill="white")
+

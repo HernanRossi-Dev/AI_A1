@@ -2,13 +2,13 @@
 class SearchTreeNode:
     numberOfNodesCreated = 0
 
-    def __init__(self, city, location, parent, neighbours, depth = 1):
+    def __init__(self, city, location, parent, neighbours, depth = 0):
         self.city = city
         self.cityCoordinates = location
         self.parent = parent
         self.neighbours = neighbours
         self.children = []
-        self.depth = 0
+        self.depth = depth
 
     def getCity(self):
         return self.city

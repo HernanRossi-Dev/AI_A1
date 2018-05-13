@@ -2,8 +2,10 @@ from CityMapRepresentation import CityMapRepresentation
 from DepthFirstSearch import DepthFirstSearch
 from BreadthFirstSearch import BreadthFirstSearch
 from IterativeDeepeningSearch import IterativeDeepeningSearch
+from GreedyBestFirst import GreedyBestFirst
 import sys
 from PrintMap import PrintMap
+import time
 
 
 class introAi:
@@ -49,6 +51,9 @@ class introAi:
             runDFS.depthFirstSearch()
             self.allActionsTaken = runDFS.allActionsTaken
             self.searchSolution = runDFS.searchSolution
+            print('Number of Nodes Visited: ', runDFS.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runDFS.numberOfNodesCreated)
+            print('Solution length: ', len(runDFS.searchSolution))
         elif sys.argv[1] == 'IDS':
             newMap = CityMapRepresentation()
             newMap.generateCityLocations()
@@ -61,6 +66,9 @@ class introAi:
             runIDS.iterativeDS()
             self.allActionsTaken = runIDS.allActionsTaken
             self.searchSolution = runIDS.searchSolution
+            print('Number of Nodes Visited: ', runIDS.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runIDS.numberOfNodesCreated)
+            print('Solution length: ', len(runIDS.searchSolution))
         elif sys.argv[1] == 'BFS':
             newMap = CityMapRepresentation()
             newMap.generateCityLocations()
@@ -73,11 +81,15 @@ class introAi:
             runBFS.breadthFirstSearch()
             self.allActionsTaken = runBFS.allActionsTaken
             self.searchSolution = runBFS.searchSolution
+            print('Number of Nodes Visited: ', runBFS.numberOfNodesVisited)
+            print('Number of Nodes Created: ', runBFS.numberOfNodesCreated)
+            print('Solution length: ', len(runBFS.searchSolution))
         elif sys.argv[1] == 'IDS100':
             numberProbsSolved = 0
             sumNodesCreated = 0
             sumNodesVisited = 0
             sumSolutionLength = 0
+            start_time = time.time()
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
                 newMap.generateCityLocations()
@@ -98,7 +110,7 @@ class introAi:
                 sumNodesCreated += numberNodesCreated
                 sumNodesVisited += numberNodesVisited
                 sumSolutionLength += solutionLength
-
+            elapsed_time = time.time() - start_time
             aveNodesCreated = sumNodesCreated / 100
             aveNodesVisited = sumNodesVisited / 100
             aveSolutonLength = sumSolutionLength / 100
@@ -106,12 +118,13 @@ class introAi:
             print('Average Nodes Created: ', aveNodesCreated)
             print('Average Solution Length: ', aveSolutonLength)
             print('Number problems Solved: ', numberProbsSolved)
-
+            print('Total time taken: ' , elapsed_time)
         elif sys.argv[1] == 'DFS100':
             numberProbsSolved = 0
             sumNodesCreated = 0
             sumNodesVisited = 0
             sumSolutionLength = 0
+            start_time = time.time()
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
                 newMap.generateCityLocations()
@@ -133,6 +146,7 @@ class introAi:
                 sumNodesVisited += numberNodesVisited
                 sumSolutionLength += solutionLength
 
+            elapsed_time = time.time() - start_time
             aveNodesCreated = sumNodesCreated / 100
             aveNodesVisited = sumNodesVisited / 100
             aveSolutonLength = sumSolutionLength / 100
@@ -140,11 +154,13 @@ class introAi:
             print('Average Nodes Created: ', aveNodesCreated)
             print('Average Solution Length: ', aveSolutonLength)
             print('Number problems Solved: ', numberProbsSolved)
+            print('Total time taken: ', elapsed_time)
         elif sys.argv[1] == 'BFS100':
             numberProbsSolved = 0
             sumNodesCreated = 0
             sumNodesVisited = 0
             sumSolutionLength = 0
+            start_time = time.time()
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
                 newMap.generateCityLocations()
@@ -166,6 +182,7 @@ class introAi:
                 sumNodesVisited += numberNodesVisited
                 sumSolutionLength += solutionLength
 
+            elapsed_time = time.time() - start_time
             aveNodesCreated = sumNodesCreated / 100
             aveNodesVisited = sumNodesVisited / 100
             aveSolutonLength = sumSolutionLength / 100
@@ -173,6 +190,41 @@ class introAi:
             print('Average Nodes Created: ', aveNodesCreated)
             print('Average Solution Length: ', aveSolutonLength)
             print('Number problems Solved: ', numberProbsSolved)
+            print('Total time taken: ', elapsed_time)
+
+        elif sys.argv[1] == 'GBF':
+            print('Doing greedy best first')
+            newMap = CityMapRepresentation()
+            newMap.generateCityLocations()
+            self.startCity = newMap.startCity
+            self.goalCity = newMap.goalCity
+            self.cityLocations = newMap.cityLocations
+            self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
+            runGBS = GreedyBestFirst(self.startCity, self.goalCity, self.cityLocations,
+                                              self.mappingCitiesToConnectedNeighbours)
+            print('GBF Euclidean')
+            runGBS.greedyBestFirstSearchEuclidean()
+            self.allActionsTaken = runGBS.allActionsTaken
+            self.searchSolution = runGBS.searchSolution
+            print('Number of Nodes Visited: ', runGBS.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runGBS.numberOfNodesCreated)
+            print('Solution length: ', len(runGBS.searchSolution))
+            print('GBF Manahattan')
+            runGBS.greedyBestFirstSearchManhattan()
+            self.allActionsTaken = runGBS.allActionsTaken
+            self.searchSolution = runGBS.searchSolution
+            print('Number of Nodes Visited: ', runGBS.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runGBS.numberOfNodesCreated)
+            print('Solution length: ', len(runGBS.searchSolution))
+            print('GBF h(n) = 0')
+            runGBS.greedyBestFirstSearchNoHeuristic()
+            self.allActionsTaken = runGBS.allActionsTaken
+            self.searchSolution = runGBS.searchSolution
+            print('Number of Nodes Visited: ', runGBS.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runGBS.numberOfNodesCreated)
+            print('Solution length: ', len(runGBS.searchSolution))
+        elif sys.argv[1] == 'AStar':
+            print('Doing greedy best first')
 
         if len(sys.argv) < 3:
             print('Not printing map')

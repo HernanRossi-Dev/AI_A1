@@ -29,7 +29,7 @@ class DepthFirstSearch:
                 self.allActionsTaken.append([cityName, city.getParent().getCity()])
             if cityName == self.goalCity:
                 self.numberOfCitiesVisited += 1
-                print('Visiting Goal', cityName)
+                # print('Visiting Goal', cityName)
                 pathToGoal = []
                 while city.getParent():
                     pathToGoal.append(city.getName())
@@ -37,16 +37,10 @@ class DepthFirstSearch:
                 pathToGoal.append(city.getName())
                 pathToGoal.reverse()
                 self.searchSolution = pathToGoal
-                print('Number of nodes created')
-                print(self.numberOfNodesCreated)
-                print('Number of Nodes Visited')
-                print(self.numberOfCitiesVisited)
-                print('Path to goal found: ')
-                print(self.searchSolution)
                 self.solutionFound = True
                 return self.searchSolution
             if cityName not in visited:
-                print('Visiting ', city.getCity())
+                # print('Visiting ', city.getCity())
                 visited.append(cityName)
                 self.numberOfCitiesVisited += 1
                 cityNeighbours = city.getNeighbours()
@@ -58,5 +52,5 @@ class DepthFirstSearch:
             else:
                 # already visited
                 continue
-        print('No solution Found.')
+        # print('No solution Found.')
         return []

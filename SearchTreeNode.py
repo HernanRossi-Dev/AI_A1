@@ -9,6 +9,7 @@ class SearchTreeNode:
         self.neighbours = neighbours
         self.children = []
         self.depth = depth
+        self.pathCost = 0
 
     def getCity(self):
         return self.city

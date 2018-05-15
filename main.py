@@ -3,6 +3,7 @@ from DepthFirstSearch import DepthFirstSearch
 from BreadthFirstSearch import BreadthFirstSearch
 from IterativeDeepeningSearch import IterativeDeepeningSearch
 from GreedyBestFirst import GreedyBestFirst
+from AStar import AStar
 import sys
 from PrintMap import PrintMap
 import time
@@ -209,7 +210,7 @@ class introAi:
             print('Number of Nodes Visited: ', runGBS.numberOfCitiesVisited)
             print('Number of Nodes Created: ', runGBS.numberOfNodesCreated)
             print('Solution length: ', len(runGBS.searchSolution))
-            print('GBF Manahattan')
+            print('GBF Manhattan')
             runGBS.greedyBestFirstSearchManhattan()
             self.allActionsTaken = runGBS.allActionsTaken
             self.searchSolution = runGBS.searchSolution
@@ -224,7 +225,36 @@ class introAi:
             print('Number of Nodes Created: ', runGBS.numberOfNodesCreated)
             print('Solution length: ', len(runGBS.searchSolution))
         elif sys.argv[1] == 'AStar':
-            print('Doing greedy best first')
+            print('Doing A*')
+            newMap = CityMapRepresentation()
+            newMap.generateCityLocations()
+            self.startCity = newMap.startCity
+            self.goalCity = newMap.goalCity
+            self.cityLocations = newMap.cityLocations
+            self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
+            runAStar = AStar(self.startCity, self.goalCity, self.cityLocations,
+                                     self.mappingCitiesToConnectedNeighbours)
+            print('A* Euclidean')
+            runAStar.AStarEuclidean()
+            self.allActionsTaken = runAStar.allActionsTaken
+            self.searchSolution = runAStar.searchSolution
+            print('Number of Nodes Visited: ', runAStar.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runAStar.numberOfNodesCreated)
+            print('Solution length: ', len(runAStar.searchSolution))
+            print('A* Manhattan')
+            runAStar.AStarManhattan()
+            self.allActionsTaken = runAStar.allActionsTaken
+            self.searchSolution = runAStar.searchSolution
+            print('Number of Nodes Visited: ', runAStar.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runAStar.numberOfNodesCreated)
+            print('Solution length: ', len(runAStar.searchSolution))
+            print('A* h(n) = 0')
+            runAStar.AStarNoHeuristic()
+            self.allActionsTaken = runAStar.allActionsTaken
+            self.searchSolution = runAStar.searchSolution
+            print('Number of Nodes Visited: ', runAStar.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runAStar.numberOfNodesCreated)
+            print('Solution length: ', len(runAStar.searchSolution))
 
         if len(sys.argv) < 3:
             print('Not printing map')

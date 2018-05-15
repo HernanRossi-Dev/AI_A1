@@ -69,9 +69,10 @@ class AStar:
                 self.numberOfCitiesVisited += 1
                 cityNeighbours = city.getNeighbours()
                 mapCurrentNeighbourToHeuristic = {}
+                costFromStart = 0
                 for neighbour in cityNeighbours:
                     costUpToParent = city.pathCost
-                    costFromParent = self.calcCostFromParent(city, neighbour)
+                    costFromParent = self.calcCostFromParent(city.getCity(), neighbour)
                     costFromStart = costUpToParent + costFromParent
                     costToGoal = self.mapCitiesToDistanceToGoalEuclideanDist[neighbour]
                     mapCurrentNeighbourToHeuristic[neighbour] = costFromStart + costToGoal
@@ -84,7 +85,7 @@ class AStar:
                     newNode = SearchTreeNode(addNeighbourBasedOnHeuristic,
                                              self.cityLocations[addNeighbourBasedOnHeuristic], city,
                                              self.mappingCitiesToConnectedNeighbours[addNeighbourBasedOnHeuristic])
-                    newNode.pathCost = mapCurrentNeighbourToHeuristic[addNeighbourBasedOnHeuristic]
+                    newNode.pathCost = costFromStart
                     del mapCurrentNeighbourToHeuristic[addNeighbourBasedOnHeuristic]
 
                     stack.append(newNode)
@@ -129,12 +130,12 @@ class AStar:
                     self.numberOfCitiesVisited += 1
                     cityNeighbours = city.getNeighbours()
                     mapCurrentNeighbourToHeuristic = {}
+                    costFromStart = 0
                     for neighbour in cityNeighbours:
                         costUpToParent = city.pathCost
-                        costFromParent = self.calcCostFromParent(city, neighbour)
+                        costFromParent = self.calcCostFromParent(city.getCity(), neighbour)
                         costFromStart = costUpToParent + costFromParent
-                        costToGoal = 0
-                        mapCurrentNeighbourToHeuristic[neighbour] = costFromStart + costToGoal
+                        mapCurrentNeighbourToHeuristic[neighbour] = costFromStart
 
                     while len(mapCurrentNeighbourToHeuristic) > 0:
                         addNeighbourBasedOnHeuristic = max(mapCurrentNeighbourToHeuristic,
@@ -144,7 +145,7 @@ class AStar:
                         newNode = SearchTreeNode(addNeighbourBasedOnHeuristic,
                                                  self.cityLocations[addNeighbourBasedOnHeuristic], city,
                                                  self.mappingCitiesToConnectedNeighbours[addNeighbourBasedOnHeuristic])
-                        newNode.pathCost = mapCurrentNeighbourToHeuristic[addNeighbourBasedOnHeuristic]
+                        newNode.pathCost = costFromStart
                         del mapCurrentNeighbourToHeuristic[addNeighbourBasedOnHeuristic]
 
                         stack.append(newNode)
@@ -188,9 +189,10 @@ class AStar:
                 self.numberOfCitiesVisited += 1
                 cityNeighbours = city.getNeighbours()
                 mapCurrentNeighbourToHeuristic = {}
+                costFromStart = 0
                 for neighbour in cityNeighbours:
                     costUpToParent = city.pathCost
-                    costFromParent = self.calcCostFromParent(city, neighbour)
+                    costFromParent = self.calcCostFromParent(city.getCity(), neighbour)
                     costFromStart = costUpToParent + costFromParent
                     costToGoal = self.mapCitiesToDistanceToGoalManhattanDist[neighbour]
                     mapCurrentNeighbourToHeuristic[neighbour] = costFromStart + costToGoal
@@ -203,7 +205,7 @@ class AStar:
                     newNode = SearchTreeNode(addNeighbourBasedOnHeuristic,
                                              self.cityLocations[addNeighbourBasedOnHeuristic], city,
                                              self.mappingCitiesToConnectedNeighbours[addNeighbourBasedOnHeuristic])
-                    newNode.pathCost = mapCurrentNeighbourToHeuristic[addNeighbourBasedOnHeuristic]
+                    newNode.pathCost = costFromStart
                     del mapCurrentNeighbourToHeuristic[addNeighbourBasedOnHeuristic]
 
                     stack.append(newNode)

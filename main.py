@@ -45,8 +45,6 @@ class introAi:
             print(self.startCity)
             print('Goal city is: ')
             print(self.goalCity)
-            print(self.cityLocations)
-            print(self.mappingCitiesToConnectedNeighbours)
             runDFS = DepthFirstSearch( self.startCity, self.goalCity, self.cityLocations,
                                        self.mappingCitiesToConnectedNeighbours)
             runDFS.depthFirstSearch()

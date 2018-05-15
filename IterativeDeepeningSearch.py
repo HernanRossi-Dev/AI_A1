@@ -40,8 +40,6 @@ class IterativeDeepeningSearch:
             # print('making it into while', len(stack))
             city = stack.pop()
             cityName = city.getName()
-            if city.getParent():
-                self.allActionsTaken.append([cityName, city.getParent().getCity()])
             if cityName == self.goalCity:
                 numberOfCitiesVisited += 1
                 # print('Visiting Goal', cityName)
@@ -58,6 +56,8 @@ class IterativeDeepeningSearch:
                 return 'Solution Found'
             if cityName not in visited:
                 # print('Visiting ', city.getCity())
+                if city.getParent():
+                    self.allActionsTaken.append([cityName, city.getParent().getCity()])
                 if city.depth >= limit:
                     visited.append(cityName)
                     numberOfCitiesVisited += 1
@@ -66,10 +66,11 @@ class IterativeDeepeningSearch:
                     numberOfCitiesVisited += 1
                     cityNeighbours = city.getNeighbours()
                     for neighbour in cityNeighbours:
-                        newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
+                        if neighbour not in visited:
+                            newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
                                                  self.mappingCitiesToConnectedNeighbours[neighbour], city.depth + 1)
-                        stack.append(newNode)
-                        numberOfNodesCreated += 1
+                            stack.append(newNode)
+                            numberOfNodesCreated += 1
             else:
                 # already visited
                 continue

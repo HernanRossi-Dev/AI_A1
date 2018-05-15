@@ -16,7 +16,7 @@ class PrintMap(tk.Tk):
         self.cityLocations = cityLocations
         self.searchSolution = searchSolution
         self.allCitiesVisited = allCitiesVisited
-        self.canvas = tk.Canvas(self, width=1000, height=1000, borderwidth=0, highlightthickness=0)
+        self.canvas = tk.Canvas(self, width=1300, height=1000, borderwidth=0, highlightthickness=0)
         self.canvas.pack(side="top", fill="both", expand="true")
         self.rows = 100
         self.columns = 100
@@ -69,18 +69,24 @@ class PrintMap(tk.Tk):
 
     def printAllCitiesVisited(self):
         actionNumber = 0
+        textOffset = 0
+        yOffset = 1025
         citiesTagged = {}
-        for fromCity, toCity in self.allCitiesVisited:
+        for toCity, fromCity in self.allCitiesVisited:
             fromCityLocation = self.cityLocations[fromCity]
             toCityLocation = self.cityLocations[toCity]
             actionNumber += 1
-            if fromCity in citiesTagged:
-                citiesTagged[fromCity] += 15
-            else:
-                citiesTagged[fromCity] = 25
-
+            # if fromCity in citiesTagged:
+            #     citiesTagged[fromCity] += 15
+            # else:
+            #     citiesTagged[fromCity] = 25
+            textOffset += 25
+            if actionNumber == 40:
+                textOffset = 25
+                yOffset = yOffset + 150
             outputString = 'Move: ' + str(actionNumber) + ' ' + fromCity + ' -> ' + toCity
             self.canvas.create_line(fromCityLocation[0] * 10, fromCityLocation[1] * 10, toCityLocation[0] * 10,
                                         toCityLocation[1] * 10, fill='#a36501', width=3)
-            self.canvas.create_text((fromCityLocation[0] * 10),  fromCityLocation[1] * 10 + 20 + citiesTagged[fromCity], anchor=tk.W, font="Arial", text=outputString, fill="white")
+            # self.canvas.create_text((fromCityLocation[0] * 10),  fromCityLocation[1] * 10 + 20 + citiesTagged[fromCity], anchor=tk.W, font="Arial", text=outputString, fill="white")
+            self.canvas.create_text(yOffset,  textOffset , anchor=tk.W, font="Arial", text=outputString, fill="black")
 

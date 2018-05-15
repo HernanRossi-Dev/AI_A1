@@ -33,10 +33,6 @@ class BreadthFirstSearch:
         self.numberOfNodesVisited = 0
         while citiesToVisitQueue.qsize() != 0:
             visitCity = citiesToVisitQueue.get()
-
-            if visitCity.getParent():
-                self.allActionsTaken.append([visitCity.getCity(), visitCity.getParent().getCity()])
-
             if visitCity.getCity() == self.goalCity:
 
                 self.numberOfNodesVisited += 1
@@ -53,15 +49,20 @@ class BreadthFirstSearch:
             if citiesVisited[visitCity.getCity()]:
                 continue
             else:
+                if city.getParent():
+                    self.allActionsTaken.append([cityName, city.getParent().getCity()])
                 self.numberOfNodesVisited += 1
                 # print('Visiting ', visitCity.getCity())
                 citiesVisited[visitCity.getCity()] = True
                 listOfNeighbours = visitCity.getNeighbours()
                 for neighbour in listOfNeighbours:
-                    newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], visitCity,
-                                             self.mappingCitiesToConnectedNeighbours[neighbour])
-                    self.numberOfNodesCreated += 1
-                    citiesToVisitQueue.put(newNode)
+                    if citiesVisited[neighbour]:
+                        continue
+                    else:
+                        newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], visitCity,
+                                                 self.mappingCitiesToConnectedNeighbours[neighbour])
+                        self.numberOfNodesCreated += 1
+                        citiesToVisitQueue.put(newNode)
 
         # No solution found return an empty path
         # print('No solution Found')

@@ -49,8 +49,6 @@ class GreedyBestFirst:
         while stack:
             city = stack.pop()
             cityName = city.getName()
-            if city.getParent():
-                self.allActionsTaken.append([cityName, city.getParent().getCity()])
             if cityName == self.goalCity:
                 self.numberOfCitiesVisited += 1
                 print('Visiting Goal', cityName)
@@ -64,18 +62,17 @@ class GreedyBestFirst:
                 self.solutionFound = True
                 return self.searchSolution
             if cityName not in visited:
-                # print('Visiting ', city.getCity())
+                if city.getParent():
+                    self.allActionsTaken.append([cityName, city.getParent().getCity()])
                 visited.append(cityName)
                 self.numberOfCitiesVisited += 1
                 cityNeighbours = city.getNeighbours()
                 mapCurrentNeighbourToHeuristic = {}
                 for neighbour in cityNeighbours:
-                    mapCurrentNeighbourToHeuristic[neighbour] = self.mapCitiesToDistanceToGoalEuclideanDist[neighbour]
-
+                    if neighbour not in visited:
+                       mapCurrentNeighbourToHeuristic[neighbour] = self.mapCitiesToDistanceToGoalEuclideanDist[neighbour]
                 while len(mapCurrentNeighbourToHeuristic) > 0:
                     addClosestToGoalNeighbour = max(mapCurrentNeighbourToHeuristic, key=mapCurrentNeighbourToHeuristic.get)
-                    # print(addClosestToGoalNeighbour)
-                    # print(self.mapCitiesToDistanceToGoalEuclideanDist[addClosestToGoalNeighbour])
                     del mapCurrentNeighbourToHeuristic[addClosestToGoalNeighbour]
                     newNode = SearchTreeNode(addClosestToGoalNeighbour, self.cityLocations[addClosestToGoalNeighbour], city,
                                              self.mappingCitiesToConnectedNeighbours[addClosestToGoalNeighbour])
@@ -121,10 +118,11 @@ class GreedyBestFirst:
                     self.numberOfCitiesVisited += 1
                     cityNeighbours = city.getNeighbours()
                     for neighbour in cityNeighbours:
-                        newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
-                                                 self.mappingCitiesToConnectedNeighbours[neighbour])
-                        stack.append(newNode)
-                        self.numberOfNodesCreated += 1
+                        if neighbour not in visited:
+                            newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
+                                                     self.mappingCitiesToConnectedNeighbours[neighbour])
+                            stack.append(newNode)
+                            self.numberOfNodesCreated += 1
 
                 else:
                     # already visited
@@ -167,7 +165,8 @@ class GreedyBestFirst:
                 cityNeighbours = city.getNeighbours()
                 mapCurrentNeighbourToHeuristic = {}
                 for neighbour in cityNeighbours:
-                    mapCurrentNeighbourToHeuristic[neighbour] = self.mapCitiesToDistanceToGoalManhattanDist[neighbour]
+                    if neighbour not in visited:
+                        mapCurrentNeighbourToHeuristic[neighbour] = self.mapCitiesToDistanceToGoalManhattanDist[neighbour]
 
                 while len(mapCurrentNeighbourToHeuristic) > 0:
                     addClosestToGoalNeighbour = max(mapCurrentNeighbourToHeuristic, key=mapCurrentNeighbourToHeuristic.get)

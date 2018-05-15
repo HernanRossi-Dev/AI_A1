@@ -49,8 +49,7 @@ class AStar:
         while stack:
             city = stack.pop()
             cityName = city.getName()
-            if city.getParent():
-                self.allActionsTaken.append([cityName, city.getParent().getCity()])
+
             if cityName == self.goalCity:
                 self.numberOfCitiesVisited += 1
                 print('Visiting Goal', cityName)
@@ -64,6 +63,8 @@ class AStar:
                 self.solutionFound = True
                 return self.searchSolution
             if cityName not in visited:
+                if city.getParent():
+                    self.allActionsTaken.append([cityName, city.getParent().getCity()])
                 # print('Visiting ', city.getCity())
                 visited.append(cityName)
                 self.numberOfCitiesVisited += 1
@@ -71,11 +72,12 @@ class AStar:
                 mapCurrentNeighbourToHeuristic = {}
                 costFromStart = 0
                 for neighbour in cityNeighbours:
-                    costUpToParent = city.pathCost
-                    costFromParent = self.calcCostFromParent(city.getCity(), neighbour)
-                    costFromStart = costUpToParent + costFromParent
-                    costToGoal = self.mapCitiesToDistanceToGoalEuclideanDist[neighbour]
-                    mapCurrentNeighbourToHeuristic[neighbour] = costFromStart + costToGoal
+                    if neighbour not in visited:
+                        costUpToParent = city.pathCost
+                        costFromParent = self.calcCostFromParent(city.getCity(), neighbour)
+                        costFromStart = costUpToParent + costFromParent
+                        costToGoal = self.mapCitiesToDistanceToGoalEuclideanDist[neighbour]
+                        mapCurrentNeighbourToHeuristic[neighbour] = costFromStart + costToGoal
 
                 while len(mapCurrentNeighbourToHeuristic) > 0:
                     addNeighbourBasedOnHeuristic = max(mapCurrentNeighbourToHeuristic,
@@ -132,11 +134,11 @@ class AStar:
                     mapCurrentNeighbourToHeuristic = {}
                     costFromStart = 0
                     for neighbour in cityNeighbours:
-                        costUpToParent = city.pathCost
-                        costFromParent = self.calcCostFromParent(city.getCity(), neighbour)
-                        costFromStart = costUpToParent + costFromParent
-                        mapCurrentNeighbourToHeuristic[neighbour] = costFromStart
-
+                        if neighbour not in visited:
+                            costUpToParent = city.pathCost
+                            costFromParent = self.calcCostFromParent(city.getCity(), neighbour)
+                            costFromStart = costUpToParent + costFromParent
+                            mapCurrentNeighbourToHeuristic[neighbour] = costFromStart
                     while len(mapCurrentNeighbourToHeuristic) > 0:
                         addNeighbourBasedOnHeuristic = max(mapCurrentNeighbourToHeuristic,
                                                         key=mapCurrentNeighbourToHeuristic.get)
@@ -191,11 +193,12 @@ class AStar:
                 mapCurrentNeighbourToHeuristic = {}
                 costFromStart = 0
                 for neighbour in cityNeighbours:
-                    costUpToParent = city.pathCost
-                    costFromParent = self.calcCostFromParent(city.getCity(), neighbour)
-                    costFromStart = costUpToParent + costFromParent
-                    costToGoal = self.mapCitiesToDistanceToGoalManhattanDist[neighbour]
-                    mapCurrentNeighbourToHeuristic[neighbour] = costFromStart + costToGoal
+                    if neighbour not in visited:
+                        costUpToParent = city.pathCost
+                        costFromParent = self.calcCostFromParent(city.getCity(), neighbour)
+                        costFromStart = costUpToParent + costFromParent
+                        costToGoal = self.mapCitiesToDistanceToGoalManhattanDist[neighbour]
+                        mapCurrentNeighbourToHeuristic[neighbour] = costFromStart + costToGoal
 
                 while len(mapCurrentNeighbourToHeuristic) > 0:
                     addNeighbourBasedOnHeuristic = max(mapCurrentNeighbourToHeuristic,

@@ -6,29 +6,9 @@ from BreadthFirstSearch import BreadthFirstSearch
 from IterativeDeepeningSearch import IterativeDeepeningSearch
 import sys
 
-#     NorthWest region is :
-#                           top left corner = (0, 100)          top right corner = (50, 100)
-#                         bottom left corner = (0, 50)        Bottom right corner = (50, 50)
-#     NorthEast region is :
-#                           top left corner = (50, 100)          top right corner = (100, 100)
-#                         bottom left corner = (50, 50)        Bottom right corner = (100, 50)
-#     SouthEast region is :
-#                            top left corner = (50, 50)          top right corner = (100, 50)
-#                          bottom left corner = (50, 0)        Bottom right corner = (100, 0)
-#     SouthWest region is :
-#                           top left corner = (0, 50)          top right corner = (50, 50)
-#                         bottom left corner = (0, 0)        Bottom right corner = (50, 0)
-#   NW ranges : x = 0-50    y = 50-100
-#   NE ranges : x = 50-100  y = 50-100
-#   SE ranges : x = 50-100  y = 0-50
-#   SW ranges : x = 0-50  y = 0-50
-#
-# A city is in location based on its SW: if it is in location (50,50) it will be in quadrant NE
-#     create dictionary of city location pairs
-
 class CityMapRepresentation:
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         self.cities = ['A', 'B', 'C', 'D', 'E', 'F',
                        'G', 'H', 'I', 'J', 'K', 'L',
                        'M', 'N', 'O', 'P', 'Q', 'R',
@@ -127,6 +107,6 @@ class CityMapRepresentation:
             currentNumNeighbours = len(self.mappingCitiesToConnectedNeighbours[cityWithNeighbours])
             sumNumNeighbours += currentNumNeighbours
         averageNumBranches = sumNumNeighbours /26
-        print('The average Number of branches is : ')
-        print(averageNumBranches)
+        # print('The average Number of branches is : ')
+        # print(averageNumBranches)
         return averageNumBranches

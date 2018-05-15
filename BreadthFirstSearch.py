@@ -33,6 +33,8 @@ class BreadthFirstSearch:
         self.numberOfNodesVisited = 0
         while citiesToVisitQueue.qsize() != 0:
             visitCity = citiesToVisitQueue.get()
+
+
             if visitCity.getCity() == self.goalCity:
 
                 self.numberOfNodesVisited += 1
@@ -49,8 +51,9 @@ class BreadthFirstSearch:
             if citiesVisited[visitCity.getCity()]:
                 continue
             else:
-                if city.getParent():
-                    self.allActionsTaken.append([cityName, city.getParent().getCity()])
+                if visitCity.getParent():
+                    self.allActionsTaken.append([visitCity.getCity(), visitCity.getParent().getCity()])
+
                 self.numberOfNodesVisited += 1
                 # print('Visiting ', visitCity.getCity())
                 citiesVisited[visitCity.getCity()] = True

@@ -52,7 +52,7 @@ class AStar:
 
             if cityName == self.goalCity:
                 self.numberOfCitiesVisited += 1
-                print('Visiting Goal', cityName)
+                # print('Visiting Goal', cityName)
                 pathToGoal = []
                 while city.getParent():
                     pathToGoal.append(city.getName())
@@ -116,7 +116,7 @@ class AStar:
                     self.allActionsTaken.append([cityName, city.getParent().getCity()])
                 if cityName == self.goalCity:
                     self.numberOfCitiesVisited += 1
-                    print('Visiting Goal', cityName)
+                    # print('Visiting Goal', cityName)
                     pathToGoal = []
                     while city.getParent():
                         pathToGoal.append(city.getName())
@@ -175,7 +175,7 @@ class AStar:
                 self.allActionsTaken.append([cityName, city.getParent().getCity()])
             if cityName == self.goalCity:
                 self.numberOfCitiesVisited += 1
-                print('Visiting Goal', cityName)
+                # print('Visiting Goal', cityName)
                 pathToGoal = []
                 while city.getParent():
                     pathToGoal.append(city.getName())

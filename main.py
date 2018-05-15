@@ -41,10 +41,6 @@ class introAi:
             self.goalCity = newMap.goalCity
             self.cityLocations = newMap.cityLocations
             self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
-            print('Start city is: ')
-            print(self.startCity)
-            print('Goal city is: ')
-            print(self.goalCity)
             runDFS = DepthFirstSearch( self.startCity, self.goalCity, self.cityLocations,
                                        self.mappingCitiesToConnectedNeighbours)
             runDFS.depthFirstSearch()
@@ -75,26 +71,28 @@ class introAi:
             self.goalCity = newMap.goalCity
             self.cityLocations = newMap.cityLocations
             self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
-            runBFS = BreadthFirstSearch(self.startCity, self.goalCity, self.cityLocations,
+            runAStar = BreadthFirstSearch(self.startCity, self.goalCity, self.cityLocations,
                                         self.mappingCitiesToConnectedNeighbours)
-            runBFS.breadthFirstSearch()
-            self.allActionsTaken = runBFS.allActionsTaken
-            self.searchSolution = runBFS.searchSolution
-            print('Number of Nodes Visited: ', runBFS.numberOfNodesVisited)
-            print('Number of Nodes Created: ', runBFS.numberOfNodesCreated)
-            print('Solution length: ', len(runBFS.searchSolution))
+            runAStar.breadthFirstSearch()
+            self.allActionsTaken = runAStar.allActionsTaken
+            self.searchSolution = runAStar.searchSolution
+            print('Number of Nodes Visited: ', runAStar.numberOfNodesVisited)
+            print('Number of Nodes Created: ', runAStar.numberOfNodesCreated)
+            print('Solution length: ', len(runAStar.searchSolution))
         elif sys.argv[1] == 'IDS100':
             numberProbsSolved = 0
             sumNodesCreated = 0
             sumNodesVisited = 0
             sumSolutionLength = 0
             start_time = time.time()
+            sumAverageBranches = 0
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
                 newMap.generateCityLocations()
                 self.startCity = newMap.startCity
                 self.goalCity = newMap.goalCity
                 self.cityLocations = newMap.cityLocations
+                sumAverageBranches += newMap.calcAverageBranches()
                 self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
                 runIDS = IterativeDeepeningSearch(self.startCity, self.goalCity, self.cityLocations,
                                                   self.mappingCitiesToConnectedNeighbours)
@@ -113,6 +111,8 @@ class introAi:
             aveNodesCreated = sumNodesCreated / 100
             aveNodesVisited = sumNodesVisited / 100
             aveSolutonLength = sumSolutionLength / 100
+            averageNumBranches = sumAverageBranches /100
+            print('Average number of branches: ', averageNumBranches)
             print('Average Nodes Visited: ', aveNodesVisited)
             print('Average Nodes Created: ', aveNodesCreated)
             print('Average Solution Length: ', aveSolutonLength)
@@ -124,13 +124,18 @@ class introAi:
             sumNodesVisited = 0
             sumSolutionLength = 0
             start_time = time.time()
+            sumAverageBranches = 0
+
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
                 newMap.generateCityLocations()
+
                 self.startCity = newMap.startCity
                 self.goalCity = newMap.goalCity
                 self.cityLocations = newMap.cityLocations
                 self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
+                sumAverageBranches += newMap.calcAverageBranches()
+
                 runDFS = DepthFirstSearch(self.startCity, self.goalCity, self.cityLocations,
                                           self.mappingCitiesToConnectedNeighbours)
                 runDFS.depthFirstSearch()
@@ -149,6 +154,8 @@ class introAi:
             aveNodesCreated = sumNodesCreated / 100
             aveNodesVisited = sumNodesVisited / 100
             aveSolutonLength = sumSolutionLength / 100
+            averageNumBranches = sumAverageBranches /100
+            print('Average number of branches: ', averageNumBranches)
             print('Average Nodes Visited: ', aveNodesVisited)
             print('Average Nodes Created: ', aveNodesCreated)
             print('Average Solution Length: ', aveSolutonLength)
@@ -160,6 +167,8 @@ class introAi:
             sumNodesVisited = 0
             sumSolutionLength = 0
             start_time = time.time()
+            sumAverageBranches = 0
+
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
                 newMap.generateCityLocations()
@@ -167,13 +176,15 @@ class introAi:
                 self.goalCity = newMap.goalCity
                 self.cityLocations = newMap.cityLocations
                 self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
-                runBFS = BreadthFirstSearch(self.startCity, self.goalCity, self.cityLocations,
+                sumAverageBranches += newMap.calcAverageBranches()
+
+                runAStar = BreadthFirstSearch(self.startCity, self.goalCity, self.cityLocations,
                                           self.mappingCitiesToConnectedNeighbours)
-                runBFS.breadthFirstSearch()
-                numberNodesCreated = runBFS.numberOfNodesCreated
-                numberNodesVisited = runBFS.numberOfNodesVisited
-                solutionFound = runBFS.solutionFound
-                solutionPath = runBFS.searchSolution
+                runAStar.breadthFirstSearch()
+                numberNodesCreated = runAStar.numberOfNodesCreated
+                numberNodesVisited = runAStar.numberOfNodesVisited
+                solutionFound = runAStar.solutionFound
+                solutionPath = runAStar.searchSolution
                 solutionLength = len(solutionPath)
                 if solutionFound:
                     numberProbsSolved += 1
@@ -185,6 +196,8 @@ class introAi:
             aveNodesCreated = sumNodesCreated / 100
             aveNodesVisited = sumNodesVisited / 100
             aveSolutonLength = sumSolutionLength / 100
+            averageNumBranches = sumAverageBranches /100
+            print('Average number of branches: ', averageNumBranches)
             print('Average Nodes Visited: ', aveNodesVisited)
             print('Average Nodes Created: ', aveNodesCreated)
             print('Average Solution Length: ', aveSolutonLength)
@@ -199,29 +212,289 @@ class introAi:
             self.goalCity = newMap.goalCity
             self.cityLocations = newMap.cityLocations
             self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
-            runGBS = GreedyBestFirst(self.startCity, self.goalCity, self.cityLocations,
+            runAStar = GreedyBestFirst(self.startCity, self.goalCity, self.cityLocations,
                                               self.mappingCitiesToConnectedNeighbours)
-            print('GBF Euclidean')
-            runGBS.greedyBestFirstSearchEuclidean()
-            self.allActionsTaken = runGBS.allActionsTaken
-            self.searchSolution = runGBS.searchSolution
-            print('Number of Nodes Visited: ', runGBS.numberOfCitiesVisited)
-            print('Number of Nodes Created: ', runGBS.numberOfNodesCreated)
-            print('Solution length: ', len(runGBS.searchSolution))
-            print('GBF Manhattan')
-            runGBS.greedyBestFirstSearchManhattan()
-            self.allActionsTaken = runGBS.allActionsTaken
-            self.searchSolution = runGBS.searchSolution
-            print('Number of Nodes Visited: ', runGBS.numberOfCitiesVisited)
-            print('Number of Nodes Created: ', runGBS.numberOfNodesCreated)
-            print('Solution length: ', len(runGBS.searchSolution))
             print('GBF h(n) = 0')
-            runGBS.greedyBestFirstSearchNoHeuristic()
-            self.allActionsTaken = runGBS.allActionsTaken
-            self.searchSolution = runGBS.searchSolution
-            print('Number of Nodes Visited: ', runGBS.numberOfCitiesVisited)
-            print('Number of Nodes Created: ', runGBS.numberOfNodesCreated)
-            print('Solution length: ', len(runGBS.searchSolution))
+            runAStar.greedyBestFirstSearchNoHeuristic()
+            self.allActionsTaken = runAStar.allActionsTaken
+            self.searchSolution = runAStar.searchSolution
+            print('Number of Nodes Visited: ', runAStar.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runAStar.numberOfNodesCreated)
+            print('Solution length: ', len(runAStar.searchSolution))
+            print('GBF Euclidean')
+            runAStar.greedyBestFirstSearchEuclidean()
+            self.allActionsTaken = runAStar.allActionsTaken
+            self.searchSolution = runAStar.searchSolution
+            print('Number of Nodes Visited: ', runAStar.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runAStar.numberOfNodesCreated)
+            print('Solution length: ', len(runAStar.searchSolution))
+            print('GBF Manhattan')
+            runAStar.greedyBestFirstSearchManhattan()
+            self.allActionsTaken = runAStar.allActionsTaken
+            self.searchSolution = runAStar.searchSolution
+            print('Number of Nodes Visited: ', runAStar.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runAStar.numberOfNodesCreated)
+            print('Solution length: ', len(runAStar.searchSolution))
+
+        elif sys.argv[1] == 'GBF100':
+            numberProbsSolved = 0
+            sumNodesCreated = 0
+            sumNodesVisited = 0
+            sumSolutionLength = 0
+            start_time = time.time()
+            sumAverageBranches = 0
+
+            for i in range(0, 99):
+                newMap = CityMapRepresentation()
+                newMap.generateCityLocations()
+                self.startCity = newMap.startCity
+                self.goalCity = newMap.goalCity
+                self.cityLocations = newMap.cityLocations
+                self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
+                sumAverageBranches += newMap.calcAverageBranches()
+
+                runAStar = GreedyBestFirst(self.startCity, self.goalCity, self.cityLocations,
+                                            self.mappingCitiesToConnectedNeighbours)
+                runAStar.greedyBestFirstSearchEuclidean()
+                numberNodesCreated = runAStar.numberOfNodesCreated
+                numberNodesVisited = runAStar.numberOfCitiesVisited
+                solutionFound = runAStar.solutionFound
+                solutionPath = runAStar.searchSolution
+                solutionLength = len(solutionPath)
+                if solutionFound:
+                    numberProbsSolved += 1
+                sumNodesCreated += numberNodesCreated
+                sumNodesVisited += numberNodesVisited
+                sumSolutionLength += solutionLength
+
+            elapsed_time = time.time() - start_time
+            aveNodesCreated = sumNodesCreated / 100
+            aveNodesVisited = sumNodesVisited / 100
+            aveSolutonLength = sumSolutionLength / 100
+            averageNumBranches = sumAverageBranches / 100
+            print ('Statistics for Greedy Best First using Euclidean Heuristic')
+            print('Average number of branches: ', averageNumBranches)
+            print('Average Nodes Visited: ', aveNodesVisited)
+            print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Solution Length: ', aveSolutonLength)
+            print('Number problems Solved: ', numberProbsSolved)
+            print('Total time taken: ', elapsed_time)
+            numberProbsSolved = 0
+            sumNodesCreated = 0
+            sumNodesVisited = 0
+            sumSolutionLength = 0
+            start_time = time.time()
+            sumAverageBranches = 0
+            for i in range(0, 99):
+                newMap = CityMapRepresentation()
+                newMap.generateCityLocations()
+                self.startCity = newMap.startCity
+                self.goalCity = newMap.goalCity
+                self.cityLocations = newMap.cityLocations
+                self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
+                sumAverageBranches += newMap.calcAverageBranches()
+
+                runAStar = GreedyBestFirst(self.startCity, self.goalCity, self.cityLocations,
+                                            self.mappingCitiesToConnectedNeighbours)
+                runAStar.greedyBestFirstSearchManhattan()
+                numberNodesCreated = runAStar.numberOfNodesCreated
+                numberNodesVisited = runAStar.numberOfCitiesVisited
+                solutionFound = runAStar.solutionFound
+                solutionPath = runAStar.searchSolution
+                solutionLength = len(solutionPath)
+                if solutionFound:
+                    numberProbsSolved += 1
+                sumNodesCreated += numberNodesCreated
+                sumNodesVisited += numberNodesVisited
+                sumSolutionLength += solutionLength
+
+            elapsed_time = time.time() - start_time
+            aveNodesCreated = sumNodesCreated / 100
+            aveNodesVisited = sumNodesVisited / 100
+            aveSolutonLength = sumSolutionLength / 100
+            averageNumBranches = sumAverageBranches / 100
+            print (' ')
+            print ('Statistics for Greedy Best First using Manhattan Heuristic')
+
+            print('Average number of branches: ', averageNumBranches)
+            print('Average Nodes Visited: ', aveNodesVisited)
+            print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Solution Length: ', aveSolutonLength)
+            print('Number problems Solved: ', numberProbsSolved)
+            print('Total time taken: ', elapsed_time)
+            numberProbsSolved = 0
+            sumNodesCreated = 0
+            sumNodesVisited = 0
+            sumSolutionLength = 0
+            start_time = time.time()
+            sumAverageBranches = 0
+            for i in range(0, 99):
+                newMap = CityMapRepresentation()
+                newMap.generateCityLocations()
+                self.startCity = newMap.startCity
+                self.goalCity = newMap.goalCity
+                self.cityLocations = newMap.cityLocations
+                self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
+                sumAverageBranches += newMap.calcAverageBranches()
+
+                runAStar = GreedyBestFirst(self.startCity, self.goalCity, self.cityLocations,
+                                            self.mappingCitiesToConnectedNeighbours)
+                runAStar.greedyBestFirstSearchNoHeuristic()
+                numberNodesCreated = runAStar.numberOfNodesCreated
+                numberNodesVisited = runAStar.numberOfCitiesVisited
+                solutionFound = runAStar.solutionFound
+                solutionPath = runAStar.searchSolution
+                solutionLength = len(solutionPath)
+                if solutionFound:
+                    numberProbsSolved += 1
+                sumNodesCreated += numberNodesCreated
+                sumNodesVisited += numberNodesVisited
+                sumSolutionLength += solutionLength
+
+            elapsed_time = time.time() - start_time
+            aveNodesCreated = sumNodesCreated / 100
+            aveNodesVisited = sumNodesVisited / 100
+            aveSolutonLength = sumSolutionLength / 100
+            averageNumBranches = sumAverageBranches / 100
+            print (' ')
+            print ('Statistics for Greedy Best First using h(n)=0 Heuristic')
+
+            print('Average number of branches: ', averageNumBranches)
+            print('Average Nodes Visited: ', aveNodesVisited)
+            print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Solution Length: ', aveSolutonLength)
+            print('Number problems Solved: ', numberProbsSolved)
+            print('Total time taken: ', elapsed_time)
+        elif sys.argv[1] == 'AStar100':
+            numberProbsSolved = 0
+            sumNodesCreated = 0
+            sumNodesVisited = 0
+            sumSolutionLength = 0
+            start_time = time.time()
+            sumAverageBranches = 0
+
+            for i in range(0, 99):
+                newMap = CityMapRepresentation()
+                newMap.generateCityLocations()
+                self.startCity = newMap.startCity
+                self.goalCity = newMap.goalCity
+                self.cityLocations = newMap.cityLocations
+                self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
+                sumAverageBranches += newMap.calcAverageBranches()
+
+                runAStar = AStar(self.startCity, self.goalCity, self.cityLocations,
+                                            self.mappingCitiesToConnectedNeighbours)
+                runAStar.AStarEuclidean()
+                numberNodesCreated = runAStar.numberOfNodesCreated
+                numberNodesVisited = runAStar.numberOfCitiesVisited
+                solutionFound = runAStar.solutionFound
+                solutionPath = runAStar.searchSolution
+                solutionLength = len(solutionPath)
+                if solutionFound:
+                    numberProbsSolved += 1
+                sumNodesCreated += numberNodesCreated
+                sumNodesVisited += numberNodesVisited
+                sumSolutionLength += solutionLength
+
+            elapsed_time = time.time() - start_time
+            aveNodesCreated = sumNodesCreated / 100
+            aveNodesVisited = sumNodesVisited / 100
+            aveSolutonLength = sumSolutionLength / 100
+            averageNumBranches = sumAverageBranches / 100
+            print ('Statistics for A* using Euclidean Heuristic')
+            print('Average number of branches: ', averageNumBranches)
+            print('Average Nodes Visited: ', aveNodesVisited)
+            print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Solution Length: ', aveSolutonLength)
+            print('Number problems Solved: ', numberProbsSolved)
+            print('Total time taken: ', elapsed_time)
+            numberProbsSolved = 0
+            sumNodesCreated = 0
+            sumNodesVisited = 0
+            sumSolutionLength = 0
+            start_time = time.time()
+            sumAverageBranches = 0
+            for i in range(0, 99):
+                newMap = CityMapRepresentation()
+                newMap.generateCityLocations()
+                self.startCity = newMap.startCity
+                self.goalCity = newMap.goalCity
+                self.cityLocations = newMap.cityLocations
+                self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
+                sumAverageBranches += newMap.calcAverageBranches()
+
+                runAStar = AStar(self.startCity, self.goalCity, self.cityLocations,
+                                            self.mappingCitiesToConnectedNeighbours)
+                runAStar.AStarManhattan()
+                numberNodesCreated = runAStar.numberOfNodesCreated
+                numberNodesVisited = runAStar.numberOfCitiesVisited
+                solutionFound = runAStar.solutionFound
+                solutionPath = runAStar.searchSolution
+                solutionLength = len(solutionPath)
+                if solutionFound:
+                    numberProbsSolved += 1
+                sumNodesCreated += numberNodesCreated
+                sumNodesVisited += numberNodesVisited
+                sumSolutionLength += solutionLength
+
+            elapsed_time = time.time() - start_time
+            aveNodesCreated = sumNodesCreated / 100
+            aveNodesVisited = sumNodesVisited / 100
+            aveSolutonLength = sumSolutionLength / 100
+            averageNumBranches = sumAverageBranches / 100
+            print (' ')
+            print ('Statistics for A* using Manhattan Heuristic')
+
+            print('Average number of branches: ', averageNumBranches)
+            print('Average Nodes Visited: ', aveNodesVisited)
+            print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Solution Length: ', aveSolutonLength)
+            print('Number problems Solved: ', numberProbsSolved)
+            print('Total time taken: ', elapsed_time)
+            numberProbsSolved = 0
+            sumNodesCreated = 0
+            sumNodesVisited = 0
+            sumSolutionLength = 0
+            start_time = time.time()
+            sumAverageBranches = 0
+            for i in range(0, 99):
+                newMap = CityMapRepresentation()
+                newMap.generateCityLocations()
+                self.startCity = newMap.startCity
+                self.goalCity = newMap.goalCity
+                self.cityLocations = newMap.cityLocations
+                self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
+                sumAverageBranches += newMap.calcAverageBranches()
+
+                runAStar = AStar(self.startCity, self.goalCity, self.cityLocations,
+                                            self.mappingCitiesToConnectedNeighbours)
+                runAStar.AStarNoHeuristic()
+                numberNodesCreated = runAStar.numberOfNodesCreated
+                numberNodesVisited = runAStar.numberOfCitiesVisited
+                solutionFound = runAStar.solutionFound
+                solutionPath = runAStar.searchSolution
+                solutionLength = len(solutionPath)
+                if solutionFound:
+                    numberProbsSolved += 1
+                sumNodesCreated += numberNodesCreated
+                sumNodesVisited += numberNodesVisited
+                sumSolutionLength += solutionLength
+
+            elapsed_time = time.time() - start_time
+            aveNodesCreated = sumNodesCreated / 100
+            aveNodesVisited = sumNodesVisited / 100
+            aveSolutonLength = sumSolutionLength / 100
+            averageNumBranches = sumAverageBranches / 100
+            print (' ')
+            print ('Statistics for A* using h(n)=0 Heuristic')
+
+            print('Average number of branches: ', averageNumBranches)
+            print('Average Nodes Visited: ', aveNodesVisited)
+            print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Solution Length: ', aveSolutonLength)
+            print('Number problems Solved: ', numberProbsSolved)
+            print('Total time taken: ', elapsed_time)
+
         elif sys.argv[1] == 'AStar':
             print('Doing A*')
             newMap = CityMapRepresentation()
@@ -232,6 +505,13 @@ class introAi:
             self.mappingCitiesToConnectedNeighbours = newMap.mappingCitiesToConnectedNeighbours
             runAStar = AStar(self.startCity, self.goalCity, self.cityLocations,
                                      self.mappingCitiesToConnectedNeighbours)
+            print('A* h(n) = 0')
+            runAStar.AStarNoHeuristic()
+            self.allActionsTaken = runAStar.allActionsTaken
+            self.searchSolution = runAStar.searchSolution
+            print('Number of Nodes Visited: ', runAStar.numberOfCitiesVisited)
+            print('Number of Nodes Created: ', runAStar.numberOfNodesCreated)
+            print('Solution length: ', len(runAStar.searchSolution))
             print('A* Euclidean')
             runAStar.AStarEuclidean()
             self.allActionsTaken = runAStar.allActionsTaken
@@ -246,13 +526,7 @@ class introAi:
             print('Number of Nodes Visited: ', runAStar.numberOfCitiesVisited)
             print('Number of Nodes Created: ', runAStar.numberOfNodesCreated)
             print('Solution length: ', len(runAStar.searchSolution))
-            print('A* h(n) = 0')
-            runAStar.AStarNoHeuristic()
-            self.allActionsTaken = runAStar.allActionsTaken
-            self.searchSolution = runAStar.searchSolution
-            print('Number of Nodes Visited: ', runAStar.numberOfCitiesVisited)
-            print('Number of Nodes Created: ', runAStar.numberOfNodesCreated)
-            print('Solution length: ', len(runAStar.searchSolution))
+
 
         if len(sys.argv) < 3:
             print('Not printing map')

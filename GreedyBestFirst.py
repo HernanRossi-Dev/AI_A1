@@ -51,7 +51,7 @@ class GreedyBestFirst:
             cityName = city.getName()
             if cityName == self.goalCity:
                 self.numberOfCitiesVisited += 1
-                print('Visiting Goal', cityName)
+                # print('Visiting Goal', cityName)
                 pathToGoal = []
                 while city.getParent():
                     pathToGoal.append(city.getName())
@@ -102,7 +102,7 @@ class GreedyBestFirst:
                     self.allActionsTaken.append([cityName, city.getParent().getCity()])
                 if cityName == self.goalCity:
                     self.numberOfCitiesVisited += 1
-                    print('Visiting Goal', cityName)
+                    # print('Visiting Goal', cityName)
                     pathToGoal = []
                     while city.getParent():
                         pathToGoal.append(city.getName())
@@ -148,7 +148,7 @@ class GreedyBestFirst:
                 self.allActionsTaken.append([cityName, city.getParent().getCity()])
             if cityName == self.goalCity:
                 self.numberOfCitiesVisited += 1
-                print('Visiting Goal', cityName)
+                # print('Visiting Goal', cityName)
                 pathToGoal = []
                 while city.getParent():
                     pathToGoal.append(city.getName())

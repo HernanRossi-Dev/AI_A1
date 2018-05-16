@@ -14,6 +14,15 @@ class IterativeDeepeningSearch:
         self.searchSolution = []
         self.visitedCities = []
         self.solutionFound = False
+        self.maxNumberOfNodesInMemory = 0
+        self.nodeAlreadyCreated = {
+            'A': False, 'B': False, 'C': False, 'D': False, 'E': False, 'F': False,
+            'G': False, 'H': False, 'I': False, 'J': False, 'K': False, 'L': False,
+            'M': False, 'N': False, 'O': False, 'P': False, 'Q': False, 'R': False,
+            'S': False, 'T': False, 'U': False, 'V': False, 'W': False, 'X': False,
+            'Y': False, 'Z': False
+        }
+
 
     def iterativeDS(self):
         # run DFS for current depth limit then increase and continue
@@ -22,6 +31,13 @@ class IterativeDeepeningSearch:
             self.allActionsTaken = []
             self.searchSolution = []
             self.visitedCities = []
+            self.nodeAlreadyCreated = {
+                'A': False, 'B': False, 'C': False, 'D': False, 'E': False, 'F': False,
+                'G': False, 'H': False, 'I': False, 'J': False, 'K': False, 'L': False,
+                'M': False, 'N': False, 'O': False, 'P': False, 'Q': False, 'R': False,
+                'S': False, 'T': False, 'U': False, 'V': False, 'W': False, 'X': False,
+                'Y': False, 'Z': False
+            }
             result = self.depthLimit(depth)
             if result != 'Continue':
                 return 'Solution Found'
@@ -37,6 +53,8 @@ class IterativeDeepeningSearch:
         numberOfNodesCreated = 1
         numberOfCitiesVisited = 0
         while stack:
+            if self.maxNumberOfNodesInMemory < len(stack):
+                self.maxNumberOfNodesInMemory = len(stack)
             # print('making it into while', len(stack))
             city = stack.pop()
             cityName = city.getName()
@@ -67,10 +85,15 @@ class IterativeDeepeningSearch:
                     cityNeighbours = city.getNeighbours()
                     for neighbour in cityNeighbours:
                         if neighbour not in visited:
-                            newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
-                                                 self.mappingCitiesToConnectedNeighbours[neighbour], city.depth + 1)
-                            stack.append(newNode)
-                            numberOfNodesCreated += 1
+                            if self.nodeAlreadyCreated[neighbour]:
+                                continue
+                            else:
+                                newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
+                                                     self.mappingCitiesToConnectedNeighbours[neighbour], city.depth + 1)
+                                stack.append(newNode)
+                                self.nodeAlreadyCreated[neighbour] = True
+                                numberOfNodesCreated += 1
+
             else:
                 # already visited
                 continue

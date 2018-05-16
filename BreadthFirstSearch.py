@@ -14,6 +14,14 @@ class BreadthFirstSearch:
         self.numberOfNodesCreated = 0
         self.numberOfNodesVisited = 0
         self.solutionFound = False
+        self.maxNumberOfNodesInMemory = 0
+        self.nodeAlreadyCreated = {
+            'A': False, 'B': False, 'C': False, 'D': False, 'E': False, 'F': False,
+            'G': False, 'H': False, 'I': False, 'J': False, 'K': False, 'L': False,
+            'M': False, 'N': False, 'O': False, 'P': False, 'Q': False, 'R': False,
+            'S': False, 'T': False, 'U': False, 'V': False, 'W': False, 'X': False,
+            'Y': False, 'Z': False
+        }
 
     def breadthFirstSearch(self):
         citiesVisited = {
@@ -32,41 +40,36 @@ class BreadthFirstSearch:
         citiesToVisitQueue.put(startNode)
         self.numberOfNodesVisited = 0
         while citiesToVisitQueue.qsize() != 0:
-            visitCity = citiesToVisitQueue.get()
-
-
-            if visitCity.getCity() == self.goalCity:
-
-                self.numberOfNodesVisited += 1
-                # print('Visiting Goal', visitCity.getCity())
-                pathToGoal = []
-                while visitCity.getParent():
-                    pathToGoal.append(visitCity.getCity())
-                    visitCity = visitCity.getParent()
-                pathToGoal.append(visitCity.getCity())
-                pathToGoal.reverse()
-                self.searchSolution = pathToGoal
-                self.solutionFound = True
+            currentCity = citiesToVisitQueue.get()
+            currentCityName = currentCity.getName()
+            if currentCity.getCity() == self.goalCity:
+                self.processGoal(currentCity)
                 return self.searchSolution
-            if citiesVisited[visitCity.getCity()]:
-                continue
-            else:
-                if visitCity.getParent():
-                    self.allActionsTaken.append([visitCity.getCity(), visitCity.getParent().getCity()])
-
+            if not citiesVisited[currentCityName]:
+                if currentCity.getParent():
+                    self.allActionsTaken.append([currentCityName, currentCity.getParent().getCity()])
                 self.numberOfNodesVisited += 1
-                # print('Visiting ', visitCity.getCity())
-                citiesVisited[visitCity.getCity()] = True
-                listOfNeighbours = visitCity.getNeighbours()
+                citiesVisited[currentCity.getCity()] = True
+                listOfNeighbours = currentCity.getNeighbours()
                 for neighbour in listOfNeighbours:
-                    if citiesVisited[neighbour]:
-                        continue
-                    else:
-                        newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], visitCity,
-                                                 self.mappingCitiesToConnectedNeighbours[neighbour])
-                        self.numberOfNodesCreated += 1
-                        citiesToVisitQueue.put(newNode)
-
-        # No solution found return an empty path
-        # print('No solution Found')
+                    if not citiesVisited[neighbour]:
+                        if not self.nodeAlreadyCreated[neighbour]:
+                            newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], currentCity,
+                                                     self.mappingCitiesToConnectedNeighbours[neighbour])
+                            self.numberOfNodesCreated += 1
+                            citiesToVisitQueue.put(newNode)
+                            self.nodeAlreadyCreated[neighbour] = True
+                            if self.maxNumberOfNodesInMemory < citiesToVisitQueue.qsize():
+                                self.maxNumberOfNodesInMemory = citiesToVisitQueue.qsize()
         return []
+
+    def processGoal(self, visitCity):
+        self.numberOfNodesVisited += 1
+        pathToGoal = []
+        while visitCity.getParent():
+            pathToGoal.append(visitCity.getCity())
+            visitCity = visitCity.getParent()
+        pathToGoal.append(visitCity.getCity())
+        pathToGoal.reverse()
+        self.searchSolution = pathToGoal
+        self.solutionFound = True

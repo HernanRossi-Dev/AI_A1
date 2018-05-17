@@ -42,8 +42,8 @@ class BreadthFirstSearch:
         while citiesToVisitQueue.qsize() != 0:
             currentCity = citiesToVisitQueue.get()
             currentCityName = currentCity.getName()
-            if currentCity.getCity() == self.goalCity:
-                self.processGoal(currentCity)
+            if currentCityName == self.goalCity:
+                self.processGoal(currentCityName, currentCity.getParent())
                 return self.searchSolution
             if not citiesVisited[currentCityName]:
                 if currentCity.getParent():
@@ -52,6 +52,9 @@ class BreadthFirstSearch:
                 citiesVisited[currentCity.getCity()] = True
                 listOfNeighbours = currentCity.getNeighbours()
                 for neighbour in listOfNeighbours:
+                    if neighbour == self.goalCity:
+                        self.processGoal(neighbour, currentCity)
+                        return self.searchSolution
                     if not citiesVisited[neighbour]:
                         if not self.nodeAlreadyCreated[neighbour]:
                             newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], currentCity,
@@ -63,13 +66,13 @@ class BreadthFirstSearch:
                                 self.maxNumberOfNodesInMemory = citiesToVisitQueue.qsize()
         return []
 
-    def processGoal(self, visitCity):
+    def processGoal(self, goal, parentCity):
         self.numberOfNodesVisited += 1
-        pathToGoal = []
-        while visitCity.getParent():
-            pathToGoal.append(visitCity.getCity())
-            visitCity = visitCity.getParent()
-        pathToGoal.append(visitCity.getCity())
+        pathToGoal = [goal]
+        while parentCity.getParent():
+            pathToGoal.append(parentCity.getCity())
+            parentCity = parentCity.getParent()
+        pathToGoal.append(parentCity.getCity())
         pathToGoal.reverse()
         self.searchSolution = pathToGoal
         self.solutionFound = True

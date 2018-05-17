@@ -50,16 +50,7 @@ class GreedyBestFirst:
             city = stack.pop()
             cityName = city.getName()
             if cityName == self.goalCity:
-                self.numberOfCitiesVisited += 1
-                # print('Visiting Goal', cityName)
-                pathToGoal = []
-                while city.getParent():
-                    pathToGoal.append(city.getName())
-                    city = city.getParent()
-                pathToGoal.append(city.getName())
-                pathToGoal.reverse()
-                self.searchSolution = pathToGoal
-                self.solutionFound = True
+                self.processGoal(cityName, city.getParent())
                 return self.searchSolution
             if cityName not in visited:
                 if city.getParent():
@@ -78,11 +69,8 @@ class GreedyBestFirst:
                                              self.mappingCitiesToConnectedNeighbours[addClosestToGoalNeighbour])
                     stack.append(newNode)
                     self.numberOfNodesCreated += 1
-
             else:
-                # already visited
                 continue
-            # print('No solution Found.')
         return []
 
     def greedyBestFirstSearchNoHeuristic(self):
@@ -101,19 +89,9 @@ class GreedyBestFirst:
                 if city.getParent():
                     self.allActionsTaken.append([cityName, city.getParent().getCity()])
                 if cityName == self.goalCity:
-                    self.numberOfCitiesVisited += 1
-                    # print('Visiting Goal', cityName)
-                    pathToGoal = []
-                    while city.getParent():
-                        pathToGoal.append(city.getName())
-                        city = city.getParent()
-                    pathToGoal.append(city.getName())
-                    pathToGoal.reverse()
-                    self.searchSolution = pathToGoal
-                    self.solutionFound = True
+                    self.processGoal(cityName, city.getParent())
                     return self.searchSolution
                 if cityName not in visited:
-                    # print('Visiting ', city.getCity())
                     visited.append(cityName)
                     self.numberOfCitiesVisited += 1
                     cityNeighbours = city.getNeighbours()
@@ -123,11 +101,8 @@ class GreedyBestFirst:
                                                      self.mappingCitiesToConnectedNeighbours[neighbour])
                             stack.append(newNode)
                             self.numberOfNodesCreated += 1
-
                 else:
-                    # already visited
                     continue
-                # print('No solution Found.')
             return []
 
 
@@ -147,19 +122,9 @@ class GreedyBestFirst:
             if city.getParent():
                 self.allActionsTaken.append([cityName, city.getParent().getCity()])
             if cityName == self.goalCity:
-                self.numberOfCitiesVisited += 1
-                # print('Visiting Goal', cityName)
-                pathToGoal = []
-                while city.getParent():
-                    pathToGoal.append(city.getName())
-                    city = city.getParent()
-                pathToGoal.append(city.getName())
-                pathToGoal.reverse()
-                self.searchSolution = pathToGoal
-                self.solutionFound = True
+                self.processGoal(cityName, city.getParent())
                 return self.searchSolution
             if cityName not in visited:
-                # print('Visiting ', city.getCity())
                 visited.append(cityName)
                 self.numberOfCitiesVisited += 1
                 cityNeighbours = city.getNeighbours()
@@ -167,23 +132,27 @@ class GreedyBestFirst:
                 for neighbour in cityNeighbours:
                     if neighbour not in visited:
                         mapCurrentNeighbourToHeuristic[neighbour] = self.mapCitiesToDistanceToGoalManhattanDist[neighbour]
-
                 while len(mapCurrentNeighbourToHeuristic) > 0:
                     addClosestToGoalNeighbour = max(mapCurrentNeighbourToHeuristic, key=mapCurrentNeighbourToHeuristic.get)
-                    # print(addClosestToGoalNeighbour)
-                    # print(self.mapCitiesToDistanceToGoalManhattanDist[addClosestToGoalNeighbour])
                     del mapCurrentNeighbourToHeuristic[addClosestToGoalNeighbour]
                     newNode = SearchTreeNode(addClosestToGoalNeighbour, self.cityLocations[addClosestToGoalNeighbour], city,
                                              self.mappingCitiesToConnectedNeighbours[addClosestToGoalNeighbour])
                     stack.append(newNode)
                     self.numberOfNodesCreated += 1
-
             else:
-                # already visited
                 continue
-            # print('No solution Found.')
         return []
 
+    def processGoal(self, goal, parentCity):
+        self.numberOfCitiesVisited += 1
+        pathToGoal = [goal]
+        while parentCity.getParent():
+            pathToGoal.append(parentCity.getCity())
+            parentCity = parentCity.getParent()
+        pathToGoal.append(parentCity.getCity())
+        pathToGoal.reverse()
+        self.searchSolution = pathToGoal
+        self.solutionFound = True
 
     def calcAllCityDistToGoalEuclidean(self):
         goalLocation = self.cityLocations[self.goalCity]

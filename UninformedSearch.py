@@ -48,6 +48,8 @@ class UninformedSearch:
             print('Number of Nodes Created: ', runDFS.numberOfNodesCreated)
             print('Max number of Nodes in Memory: ', runDFS.maxNumberOfNodesInMemory)
             print('Number of cities visited in Solution: ', len(runDFS.searchSolution))
+            print('The resulting path is: ', runDFS.searchSolution)
+
             print ('Exact length of Solution: ', lengthOfSolutionExactDistance)
             print (' ')
         if arg == 'DFSrec':
@@ -69,8 +71,8 @@ class UninformedSearch:
             print('Number of Nodes Created: ', runDFS.numberOfNodesCreated)
             print('Max number of Nodes in Memory: ', runDFS.maxNumberOfNodesInMemory)
             print('Number of cities visited in Solution: ', len(runDFS.searchSolution))
+            print('The resulting path is: ', runDFS.searchSolution)
             print ('Exact length of Solution: ', lengthOfSolutionExactDistance)
-            print (' ')
         elif arg == 'IDS':
             newMap = CityMapRepresentation()
             newMap.generateCityLocations()
@@ -90,6 +92,7 @@ class UninformedSearch:
             print('Max number of Nodes in Memory: ', runIDS.maxNumberOfNodesInMemory)
 
             print('Number of cities visited in Solution: ', len(runIDS.searchSolution))
+            print('The resulting path is: ', runIDS.searchSolution)
             print ('Exact length of Solution: ', lengthOfSolutionExactDistance)
 
         elif arg == 'BFS':
@@ -110,6 +113,7 @@ class UninformedSearch:
             print('Number of Nodes Created: ', runBFS.numberOfNodesCreated)
             print('Max number of Nodes in Memory: ', runBFS.maxNumberOfNodesInMemory)
             print('Number of cities visited in Solution: ', len(runBFS.searchSolution))
+            print('The resulting path is: ', runBFS.searchSolution)
             print ('Exact length of Solution: ', lengthOfSolutionExactDistance)
 
         elif arg == 'IDS100':

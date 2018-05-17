@@ -51,7 +51,7 @@ class DepthFirstSearch:
                 self.maxNumberOfNodesInMemory = len(stack)
             cityName = city.getName()
             if cityName == self.goalCity:
-                self.processGoal(city)
+                self.processGoal(cityName, city.getParent())
                 return self.searchSolution
             if cityName not in self.visited:
                 if city.getParent():
@@ -60,6 +60,9 @@ class DepthFirstSearch:
                 self.numberOfCitiesVisited += 1
                 cityNeighbours = city.getNeighbours()
                 for neighbour in cityNeighbours:
+                    if neighbour == self.goalCity:
+                        self.processGoal(neighbour, city)
+                        return self.searchSolution
                     if neighbour not in self.visited:
                         if not self.nodeAlreadyCreated[neighbour]:
                             newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
@@ -95,16 +98,19 @@ class DepthFirstSearch:
         cityName = city.getName()
         if self.maxNumberOfNodesInMemory < self.NodesInMemory:
             self.maxNumberOfNodesInMemory = self.NodesInMemory
-        if cityName == self.goalCity:
-            self.processGoal(city)
-            return self.searchSolution
         if  cityName not in self.visited:
             self.visited.append(cityName)
+            if cityName == self.goalCity:
+                self.processGoal(cityName, city.getParent())
+                return self.searchSolution
             if city.getParent():
                 self.allActionsTaken.append([cityName, city.getParent().getCity()])
             self.numberOfCitiesVisited += 1
             cityNeighbours = city.getNeighbours()
             for neighbour in cityNeighbours:
+                if neighbour == self.goalCity:
+                    self.processGoal(neighbour, city)
+                    return self.searchSolution
                 if neighbour not in self.visited:
                     if not self.nodeAlreadyCreated[neighbour]:
                         newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
@@ -116,13 +122,13 @@ class DepthFirstSearch:
                         self.NodesInMemory -= 1
         return
 
-    def processGoal(self, visitCity):
+    def processGoal(self, goal, parentCity):
         self.numberOfCitiesVisited += 1
-        pathToGoal = []
-        while visitCity.getParent():
-            pathToGoal.append(visitCity.getCity())
-            visitCity = visitCity.getParent()
-        pathToGoal.append(visitCity.getCity())
+        pathToGoal = [goal]
+        while parentCity.getParent():
+            pathToGoal.append(parentCity.getCity())
+            parentCity = parentCity.getParent()
+        pathToGoal.append(parentCity.getCity())
         pathToGoal.reverse()
         self.searchSolution = pathToGoal
         self.solutionFound = True

@@ -1,6 +1,19 @@
 import math
 from SearchTreeNode import SearchTreeNode
 import queue
+
+class stateTuple(object):
+    def __init__(self, priority, state):
+        self.priority = priority
+        self.state = state
+        return
+    def __eq__(self, other):
+        return not self.priority < other.priority and not other.priority < self.priority
+    def __lt__(self, other):
+        return self.priority < other.priority
+    def __gt__(self, other):
+        return  other.priority < self.priority
+
 class AStar:
 
     def __init__(self, start, goal, cityLocations, mapCitiesToNeighbours):
@@ -13,6 +26,8 @@ class AStar:
         self.numberOfNodesCreated = 0
         self.numberOfCitiesVisited = 0
         self.solutionFound = False
+        self.maxNumberOfNodesInMemory = 0
+
         self.cities = ['A', 'B', 'C', 'D', 'E', 'F',
                        'G', 'H', 'I', 'J', 'K', 'L',
                        'M', 'N', 'O', 'P', 'Q', 'R',
@@ -54,8 +69,12 @@ class AStar:
         priorityQueue.put((0.0, startNode))
         self.numberOfNodesCreated = 1
         self.numberOfCitiesVisited = 0
+        self.maxNumberOfNodesInMemory = 0
+
         while not priorityQueue.empty():
             priority, city = priorityQueue.get()
+            if self.maxNumberOfNodesInMemory < priorityQueue.qsize():
+                self.maxNumberOfNodesInMemory = priorityQueue.qsize()
             cityName = city.getName()
             if city.getParent():
                 self.allActionsTaken.append([cityName, city.getParent().getCity()])
@@ -74,7 +93,6 @@ class AStar:
                 visited.append(cityName)
                 self.numberOfCitiesVisited += 1
                 cityNeighbours = city.getNeighbours()
-                mapCurrentNeighbourToHeuristic = {}
                 costFromStart = 0
                 for neighbour in cityNeighbours:
                     if not nodeAlreadyCreated[neighbour]:
@@ -107,12 +125,19 @@ class AStar:
         visited = []
         startNode = SearchTreeNode(self.startCity, self.cityLocations[self.startCity], False,
                                    self.mappingCitiesToConnectedNeighbours[self.startCity])
-        stack = [startNode]
+        priorityQueue = queue.PriorityQueue()
+        tup = stateTuple(0.0, startNode)
+        priorityQueue.put(tup)
         self.numberOfNodesCreated = 1
         self.numberOfCitiesVisited = 0
-        while stack:
-            city = stack.pop()
+        self.maxNumberOfNodesInMemory = 0
+
+        while not priorityQueue.empty():
+            cityTuple =priorityQueue.get()
+            city = cityTuple.state
             cityName = city.getName()
+            if self.maxNumberOfNodesInMemory < priorityQueue.qsize():
+                self.maxNumberOfNodesInMemory = priorityQueue.qsize()
             if city.getParent():
                 self.allActionsTaken.append([cityName, city.getParent().getCity()])
             if cityName == self.goalCity:
@@ -133,25 +158,22 @@ class AStar:
                 mapCurrentNeighbourToHeuristic = {}
                 costFromStart = 0
                 for neighbour in cityNeighbours:
-                    if neighbour not in visited:
-                        costUpToParent = city.pathCost
-                        costFromParent = self.calcCostFromParent(city.getCity(), neighbour)
-                        costFromStart = costUpToParent + costFromParent
-                        mapCurrentNeighbourToHeuristic[neighbour] = costFromStart
-                while len(mapCurrentNeighbourToHeuristic) > 0:
-                    addNeighbourBasedOnHeuristic = max(mapCurrentNeighbourToHeuristic,
-                                                    key=mapCurrentNeighbourToHeuristic.get)
-                    if not nodeAlreadyCreated[addNeighbourBasedOnHeuristic]:
-                        newNode = SearchTreeNode(addNeighbourBasedOnHeuristic,
-                                                 self.cityLocations[addNeighbourBasedOnHeuristic], city,
-                                                 self.mappingCitiesToConnectedNeighbours[addNeighbourBasedOnHeuristic])
-                        newNode.pathCost = costFromStart
-                        del mapCurrentNeighbourToHeuristic[addNeighbourBasedOnHeuristic]
+                    if not nodeAlreadyCreated[neighbour]:
+                        if neighbour not in visited:
+                            costUpToParent = city.pathCost
+                            costFromParent = self.calcCostFromParent(city.getCity(), neighbour)
+                            costFromStart = costUpToParent + costFromParent
+                            costToGoal = 0.00
 
-                        stack.append(newNode)
-                        self.numberOfNodesCreated += 1
-            else:
-                continue
+                            newNode = SearchTreeNode(neighbour,
+                                                     self.cityLocations[neighbour], city,
+                                                     self.mappingCitiesToConnectedNeighbours[neighbour])
+                            nodeAlreadyCreated[neighbour] = True
+                            newNode.pathCost = costFromStart
+                            self.numberOfNodesCreated += 1
+                            heuristicCost = costFromStart * 1.0
+                            tup = stateTuple(heuristicCost, newNode)
+                            priorityQueue.put(tup)
         return []
 
     def AStarManhattan(self):
@@ -172,9 +194,13 @@ class AStar:
         priorityQueue.put((0.0,startNode))
         self.numberOfNodesCreated = 1
         self.numberOfCitiesVisited = 0
+        self.maxNumberOfNodesInMemory = 0
+
         while not priorityQueue.empty():
             priority, city = priorityQueue.get()
             cityName = city.getName()
+            if self.maxNumberOfNodesInMemory < priorityQueue.qsize():
+                self.maxNumberOfNodesInMemory = priorityQueue.qsize()
             if city.getParent():
                 self.allActionsTaken.append([cityName, city.getParent().getCity()])
             if cityName == self.goalCity:

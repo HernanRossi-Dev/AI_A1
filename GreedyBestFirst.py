@@ -1,5 +1,17 @@
 import math
 from SearchTreeNode import SearchTreeNode
+import queue
+class stateTuple(object):
+    def __init__(self, priority, state):
+        self.priority = priority
+        self.state = state
+        return
+    def __eq__(self, other):
+        return not self.priority < other.priority and not other.priority < self.priority
+    def __lt__(self, other):
+        return self.priority < other.priority
+    def __gt__(self, other):
+        return  other.priority < self.priority
 
 class GreedyBestFirst:
 
@@ -13,6 +25,7 @@ class GreedyBestFirst:
         self.numberOfNodesCreated = 0
         self.numberOfCitiesVisited = 0
         self.solutionFound = False
+        self.maxNumberOfNodesInMemory = 0
         self.cities = ['A', 'B', 'C', 'D', 'E', 'F',
                        'G', 'H', 'I', 'J', 'K', 'L',
                        'M', 'N', 'O', 'P', 'Q', 'R',
@@ -37,40 +50,61 @@ class GreedyBestFirst:
 
 
     def greedyBestFirstSearchEuclidean(self):
+        nodeAlreadyCreated = {
+            'A': False, 'B': False, 'C': False, 'D': False, 'E': False, 'F': False,
+            'G': False, 'H': False, 'I': False, 'J': False, 'K': False, 'L': False,
+            'M': False, 'N': False, 'O': False, 'P': False, 'Q': False, 'R': False,
+            'S': False, 'T': False, 'U': False, 'V': False, 'W': False, 'X': False,
+            'Y': False, 'Z': False
+        }
         self.allActionsTaken = []
         self.searchSolution = []
         self.solutionFound = False
         visited = []
         startNode = SearchTreeNode(self.startCity, self.cityLocations[self.startCity], False,
                                    self.mappingCitiesToConnectedNeighbours[self.startCity])
-        stack = [startNode]
+        priorityQueue = queue.PriorityQueue()
+        tup = stateTuple(0.0, startNode)
+        priorityQueue.put(tup)
         self.numberOfNodesCreated = 1
         self.numberOfCitiesVisited = 0
-        while stack:
-            city = stack.pop()
+        self.maxNumberOfNodesInMemory = 0
+
+        while not priorityQueue.empty():
+            cityTuple = priorityQueue.get()
+            city = cityTuple.state
+            if self.maxNumberOfNodesInMemory < priorityQueue.qsize():
+                self.maxNumberOfNodesInMemory = priorityQueue.qsize()
             cityName = city.getName()
+            if city.getParent():
+                self.allActionsTaken.append([cityName, city.getParent().getCity()])
             if cityName == self.goalCity:
-                self.processGoal(cityName, city.getParent())
+                self.numberOfCitiesVisited += 1
+                pathToGoal = []
+                while city.getParent():
+                    pathToGoal.append(city.getName())
+                    city = city.getParent()
+                pathToGoal.append(city.getName())
+                pathToGoal.reverse()
+                self.searchSolution = pathToGoal
+                self.solutionFound = True
                 return self.searchSolution
             if cityName not in visited:
-                if city.getParent():
-                    self.allActionsTaken.append([cityName, city.getParent().getCity()])
                 visited.append(cityName)
                 self.numberOfCitiesVisited += 1
                 cityNeighbours = city.getNeighbours()
-                mapCurrentNeighbourToHeuristic = {}
                 for neighbour in cityNeighbours:
-                    if neighbour not in visited:
-                       mapCurrentNeighbourToHeuristic[neighbour] = self.mapCitiesToDistanceToGoalEuclideanDist[neighbour]
-                while len(mapCurrentNeighbourToHeuristic) > 0:
-                    addClosestToGoalNeighbour = max(mapCurrentNeighbourToHeuristic, key=mapCurrentNeighbourToHeuristic.get)
-                    del mapCurrentNeighbourToHeuristic[addClosestToGoalNeighbour]
-                    newNode = SearchTreeNode(addClosestToGoalNeighbour, self.cityLocations[addClosestToGoalNeighbour], city,
-                                             self.mappingCitiesToConnectedNeighbours[addClosestToGoalNeighbour])
-                    stack.append(newNode)
-                    self.numberOfNodesCreated += 1
-            else:
-                continue
+                    if not nodeAlreadyCreated[neighbour]:
+                        if neighbour not in visited:
+                            costToGoal = self.mapCitiesToDistanceToGoalEuclideanDist[neighbour]
+                            newNode = SearchTreeNode(neighbour,
+                                                     self.cityLocations[neighbour], city,
+                                                     self.mappingCitiesToConnectedNeighbours[neighbour])
+                            nodeAlreadyCreated[neighbour] = True
+                            self.numberOfNodesCreated += 1
+                            heuristicCost =  costToGoal
+                            tup = stateTuple(heuristicCost, newNode)
+                            priorityQueue.put(tup)
         return []
 
     def greedyBestFirstSearchNoHeuristic(self):
@@ -83,9 +117,13 @@ class GreedyBestFirst:
             stack = [startNode]
             self.numberOfNodesCreated = 1
             self.numberOfCitiesVisited = 0
+            self.maxNumberOfNodesInMemory = 0
+
             while stack:
                 city = stack.pop()
                 cityName = city.getName()
+                if self.maxNumberOfNodesInMemory < len(stack):
+                    self.maxNumberOfNodesInMemory = len(stack)
                 if city.getParent():
                     self.allActionsTaken.append([cityName, city.getParent().getCity()])
                 if cityName == self.goalCity:
@@ -101,46 +139,65 @@ class GreedyBestFirst:
                                                      self.mappingCitiesToConnectedNeighbours[neighbour])
                             stack.append(newNode)
                             self.numberOfNodesCreated += 1
-                else:
-                    continue
             return []
 
 
     def greedyBestFirstSearchManhattan(self):
+        nodeAlreadyCreated = {
+            'A': False, 'B': False, 'C': False, 'D': False, 'E': False, 'F': False,
+            'G': False, 'H': False, 'I': False, 'J': False, 'K': False, 'L': False,
+            'M': False, 'N': False, 'O': False, 'P': False, 'Q': False, 'R': False,
+            'S': False, 'T': False, 'U': False, 'V': False, 'W': False, 'X': False,
+            'Y': False, 'Z': False
+        }
         self.allActionsTaken = []
         self.searchSolution = []
         self.solutionFound = False
         visited = []
         startNode = SearchTreeNode(self.startCity, self.cityLocations[self.startCity], False,
                                    self.mappingCitiesToConnectedNeighbours[self.startCity])
-        stack = [startNode]
+        priorityQueue = queue.PriorityQueue()
+        tup = stateTuple(0.0, startNode)
+        priorityQueue.put(tup)
         self.numberOfNodesCreated = 1
         self.numberOfCitiesVisited = 0
-        while stack:
-            city = stack.pop()
+        self.maxNumberOfNodesInMemory = 0
+
+        while not priorityQueue.empty():
+            cityTuple = priorityQueue.get()
+            city = cityTuple.state
+            if self.maxNumberOfNodesInMemory < priorityQueue.qsize():
+                self.maxNumberOfNodesInMemory = priorityQueue.qsize()
             cityName = city.getName()
             if city.getParent():
                 self.allActionsTaken.append([cityName, city.getParent().getCity()])
             if cityName == self.goalCity:
-                self.processGoal(cityName, city.getParent())
+                self.numberOfCitiesVisited += 1
+                pathToGoal = []
+                while city.getParent():
+                    pathToGoal.append(city.getName())
+                    city = city.getParent()
+                pathToGoal.append(city.getName())
+                pathToGoal.reverse()
+                self.searchSolution = pathToGoal
+                self.solutionFound = True
                 return self.searchSolution
             if cityName not in visited:
                 visited.append(cityName)
                 self.numberOfCitiesVisited += 1
                 cityNeighbours = city.getNeighbours()
-                mapCurrentNeighbourToHeuristic = {}
                 for neighbour in cityNeighbours:
-                    if neighbour not in visited:
-                        mapCurrentNeighbourToHeuristic[neighbour] = self.mapCitiesToDistanceToGoalManhattanDist[neighbour]
-                while len(mapCurrentNeighbourToHeuristic) > 0:
-                    addClosestToGoalNeighbour = max(mapCurrentNeighbourToHeuristic, key=mapCurrentNeighbourToHeuristic.get)
-                    del mapCurrentNeighbourToHeuristic[addClosestToGoalNeighbour]
-                    newNode = SearchTreeNode(addClosestToGoalNeighbour, self.cityLocations[addClosestToGoalNeighbour], city,
-                                             self.mappingCitiesToConnectedNeighbours[addClosestToGoalNeighbour])
-                    stack.append(newNode)
-                    self.numberOfNodesCreated += 1
-            else:
-                continue
+                    if not nodeAlreadyCreated[neighbour]:
+                        if neighbour not in visited:
+                            costToGoal = self.mapCitiesToDistanceToGoalManhattanDist[neighbour]
+                            newNode = SearchTreeNode(neighbour,
+                                                     self.cityLocations[neighbour], city,
+                                                     self.mappingCitiesToConnectedNeighbours[neighbour])
+                            nodeAlreadyCreated[neighbour] = True
+                            self.numberOfNodesCreated += 1
+                            heuristicCost = costToGoal
+                            tup = stateTuple(heuristicCost, newNode)
+                            priorityQueue.put(tup)
         return []
 
     def processGoal(self, goal, parentCity):

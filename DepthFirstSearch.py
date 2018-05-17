@@ -94,33 +94,33 @@ class DepthFirstSearch:
         self.visited = []
         self.RecursiveDepthFirstSearch(startNode)
 
-    def RecursiveDepthFirstSearch(self, city):
-        cityName = city.getName()
-        if self.maxNumberOfNodesInMemory < self.NodesInMemory:
-            self.maxNumberOfNodesInMemory = self.NodesInMemory
-        if  cityName not in self.visited:
-            self.visited.append(cityName)
-            if cityName == self.goalCity:
-                self.processGoal(cityName, city.getParent())
-                return self.searchSolution
-            if city.getParent():
-                self.allActionsTaken.append([cityName, city.getParent().getCity()])
-            self.numberOfCitiesVisited += 1
-            cityNeighbours = city.getNeighbours()
-            for neighbour in cityNeighbours:
-                if neighbour == self.goalCity:
-                    self.processGoal(neighbour, city)
-                    return self.searchSolution
-                if neighbour not in self.visited:
-                    if not self.nodeAlreadyCreated[neighbour]:
-                        newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
-                                             self.mappingCitiesToConnectedNeighbours[neighbour])
-                        self.numberOfNodesCreated += 1
-                        self.NodesInMemory += 1
-                        self.nodeAlreadyCreated[neighbour] = True
-                        self.RecursiveDepthFirstSearch(newNode)
-                        self.NodesInMemory -= 1
-        return
+    # def RecursiveDepthFirstSearch(self, city):
+    #     cityName = city.getName()
+    #     if self.maxNumberOfNodesInMemory < self.NodesInMemory:
+    #         self.maxNumberOfNodesInMemory = self.NodesInMemory
+    #     if  cityName not in self.visited:
+    #         self.visited.append(cityName)
+    #         if cityName == self.goalCity:
+    #             self.processGoal(cityName, city.getParent())
+    #             return self.searchSolution
+    #         if city.getParent():
+    #             self.allActionsTaken.append([cityName, city.getParent().getCity()])
+    #         self.numberOfCitiesVisited += 1
+    #         cityNeighbours = city.getNeighbours()
+    #         for neighbour in cityNeighbours:
+    #             if neighbour == self.goalCity:
+    #                 self.processGoal(neighbour, city)
+    #                 return self.searchSolution
+    #             if neighbour not in self.visited:
+    #                 if not self.nodeAlreadyCreated[neighbour]:
+    #                     newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
+    #                                          self.mappingCitiesToConnectedNeighbours[neighbour])
+    #                     self.numberOfNodesCreated += 1
+    #                     self.NodesInMemory += 1
+    #                     self.nodeAlreadyCreated[neighbour] = True
+    #                     self.RecursiveDepthFirstSearch(newNode)
+    #                     self.NodesInMemory -= 1
+    #     return
 
     def processGoal(self, goal, parentCity):
         self.numberOfCitiesVisited += 1

@@ -55,6 +55,7 @@ class introAi:
             start_time = time.time()
             sumAverageBranches = 0
             sumLengthOfSolution = 0
+            sumNumberNodesInMemory = 0
 
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
@@ -79,6 +80,7 @@ class introAi:
                 sumNodesVisited += numberNodesVisited
                 sumNumberCitiesVisitedInSolution += citiesInSolutionPath
                 sumLengthOfSolution += self.calcLengthOfSolution(runGBF.searchSolution)
+                sumNumberNodesInMemory +=runGBF.maxNumberOfNodesInMemory
 
             elapsed_time = time.time() - start_time
             aveNodesCreated = sumNodesCreated / 100
@@ -86,11 +88,14 @@ class introAi:
             aveNumCitiesInSolution = sumNumberCitiesVisitedInSolution / 100
             averageNumBranches = sumAverageBranches / 100
             aveLengthOfSolution = sumLengthOfSolution / 100
+            aveNumNodesInMemory = sumNumberNodesInMemory / 100
 
             print ('Statistics for Greedy Best First using Euclidean Heuristic')
             print('Average number of branches: ', averageNumBranches)
             print('Average Nodes Visited: ', aveNodesVisited)
             print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Number of Nodes in Memory: ', aveNumNodesInMemory)
+
             print('Average Number Of Cities In Solution: ', aveNumCitiesInSolution)
             print('Average Length of Solution Distance: ', aveLengthOfSolution)
 
@@ -103,6 +108,7 @@ class introAi:
             start_time = time.time()
             sumAverageBranches = 0
             sumLengthOfSolution = 0
+            sumNumberNodesInMemory = 0
 
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
@@ -127,6 +133,7 @@ class introAi:
                 sumNodesVisited += numberNodesVisited
                 sumNumberCitiesVisitedInSolution += citiesInSolutionPath
                 sumLengthOfSolution += self.calcLengthOfSolution(runGBF.searchSolution)
+                sumNumberNodesInMemory += runGBF.maxNumberOfNodesInMemory
 
             elapsed_time = time.time() - start_time
             aveNodesCreated = sumNodesCreated / 100
@@ -134,6 +141,7 @@ class introAi:
             aveNumCitiesInSolution = sumNumberCitiesVisitedInSolution / 100
             averageNumBranches = sumAverageBranches / 100
             aveLengthOfSolution = sumLengthOfSolution / 100
+            aveNumNodesInMemory = sumNumberNodesInMemory / 100
 
             print (' ')
             print ('Statistics for Greedy Best First using Manhattan Heuristic')
@@ -141,6 +149,8 @@ class introAi:
             print('Average number of branches: ', averageNumBranches)
             print('Average Nodes Visited: ', aveNodesVisited)
             print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Number of Nodes in Memory: ', aveNumNodesInMemory)
+
             print('Average Number Of Cities In Solution: ', aveNumCitiesInSolution)
             print('Average Length of Solution Distance: ', aveLengthOfSolution)
 
@@ -153,6 +163,7 @@ class introAi:
             start_time = time.time()
             sumAverageBranches = 0
             sumLengthOfSolution = 0
+            sumNumberNodesInMemory = 0
 
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
@@ -177,6 +188,7 @@ class introAi:
                 sumNodesVisited += numberNodesVisited
                 sumNumberCitiesVisitedInSolution += citiesInSolutionPath
                 sumLengthOfSolution += self.calcLengthOfSolution(runGBF.searchSolution)
+                sumNumberNodesInMemory +=runGBF.maxNumberOfNodesInMemory
 
             elapsed_time = time.time() - start_time
             aveNodesCreated = sumNodesCreated / 100
@@ -184,6 +196,7 @@ class introAi:
             aveNumCitiesInSolution = sumNumberCitiesVisitedInSolution / 100
             averageNumBranches = sumAverageBranches / 100
             aveLengthOfSolution = sumLengthOfSolution / 100
+            aveNumNodesInMemory = sumNumberNodesInMemory / 100
 
             print (' ')
             print ('Statistics for Greedy Best First using h(n)=0 Heuristic')
@@ -191,12 +204,14 @@ class introAi:
             print('Average number of branches: ', averageNumBranches)
             print('Average Nodes Visited: ', aveNodesVisited)
             print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Number of Nodes in Memory: ', aveNumNodesInMemory)
+
             print('Average Number Of Cities In Solution: ', aveNumCitiesInSolution)
             print('Average Length of Solution Distance: ', aveLengthOfSolution)
 
             print('Number problems Solved: ', numberProbsSolved)
             print('Total time taken: ', elapsed_time)
-        elif sys.argv[1] == 'AStar100':
+        elif sys.argv[1] == 'AStar100E':
             numberProbsSolved = 0
             sumNodesCreated = 0
             sumNodesVisited = 0
@@ -204,7 +219,7 @@ class introAi:
             start_time = time.time()
             sumAverageBranches = 0
             sumLengthOfSolution = 0
-
+            sumNumberNodesInMemory = 0
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
                 newMap.generateCityLocations()
@@ -228,6 +243,7 @@ class introAi:
                 sumNodesVisited += numberNodesVisited
                 sumNumberCitiesVisitedInSolution += citiesInSolutionPath
                 sumLengthOfSolution += self.calcLengthOfSolution(runAStar.searchSolution)
+                sumNumberNodesInMemory +=runAStar.maxNumberOfNodesInMemory
 
             elapsed_time = time.time() - start_time
             aveNodesCreated = sumNodesCreated / 100
@@ -235,16 +251,18 @@ class introAi:
             aveNumCitiesInSolution = sumNumberCitiesVisitedInSolution / 100
             averageNumBranches = sumAverageBranches / 100
             aveLengthOfSolution = sumLengthOfSolution / 100
-
+            aveNumNodesInMemory = sumNumberNodesInMemory / 100
             print ('Statistics for A* using Euclidean Heuristic')
             print('Average number of branches: ', averageNumBranches)
             print('Average Nodes Visited: ', aveNodesVisited)
             print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Number of Nodes in Memory: ', aveNumNodesInMemory)
             print('Average Number Of Cities In Solution: ', aveNumCitiesInSolution)
             print('Average Length of Solution Distance: ', aveLengthOfSolution)
 
             print('Number problems Solved: ', numberProbsSolved)
             print('Total time taken: ', elapsed_time)
+        elif sys.argv[1] == 'AStar100M':
             numberProbsSolved = 0
             sumNodesCreated = 0
             sumNodesVisited = 0
@@ -252,6 +270,7 @@ class introAi:
             start_time = time.time()
             sumAverageBranches = 0
             sumLengthOfSolution = 0
+            sumNumberNodesInMemory = 0
 
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
@@ -276,6 +295,7 @@ class introAi:
                 sumNodesVisited += numberNodesVisited
                 sumNumberCitiesVisitedInSolution += citiesInSolutionPath
                 sumLengthOfSolution += self.calcLengthOfSolution(runAStar.searchSolution)
+                sumNumberNodesInMemory +=runAStar.maxNumberOfNodesInMemory
 
             elapsed_time = time.time() - start_time
             aveNodesCreated = sumNodesCreated / 100
@@ -283,6 +303,7 @@ class introAi:
             aveNumCitiesInSolution = sumNumberCitiesVisitedInSolution / 100
             averageNumBranches = sumAverageBranches / 100
             aveLengthOfSolution = sumLengthOfSolution / 100
+            aveNumNodesInMemory = sumNumberNodesInMemory / 100
 
             print (' ')
             print ('Statistics for A* using Manhattan Heuristic')
@@ -290,11 +311,14 @@ class introAi:
             print('Average number of branches: ', averageNumBranches)
             print('Average Nodes Visited: ', aveNodesVisited)
             print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Number of Nodes in Memory: ', aveNumNodesInMemory)
+
             print('Average Number Of Cities In Solution: ', aveNumCitiesInSolution)
             print('Average Length of Solution Distance: ', aveLengthOfSolution)
 
             print('Number problems Solved: ', numberProbsSolved)
             print('Total time taken: ', elapsed_time)
+        elif sys.argv[1] == 'AStar100N':
             numberProbsSolved = 0
             sumNodesCreated = 0
             sumNodesVisited = 0
@@ -302,6 +326,7 @@ class introAi:
             start_time = time.time()
             sumAverageBranches = 0
             sumLengthOfSolution = 0
+            sumNumberNodesInMemory = 0
 
             for i in range(0, 99):
                 newMap = CityMapRepresentation()
@@ -313,7 +338,7 @@ class introAi:
                 sumAverageBranches += newMap.calcAverageBranches()
 
                 runAStar = AStar(self.startCity, self.goalCity, self.cityLocations,
-                                            self.mappingCitiesToConnectedNeighbours)
+                                 self.mappingCitiesToConnectedNeighbours)
                 runAStar.AStarNoHeuristic()
                 numberNodesCreated = runAStar.numberOfNodesCreated
                 numberNodesVisited = runAStar.numberOfCitiesVisited
@@ -326,6 +351,7 @@ class introAi:
                 sumNodesVisited += numberNodesVisited
                 sumNumberCitiesVisitedInSolution += citiesInSolutionPath
                 sumLengthOfSolution += self.calcLengthOfSolution(runAStar.searchSolution)
+                sumNumberNodesInMemory += runAStar.maxNumberOfNodesInMemory
 
             elapsed_time = time.time() - start_time
             aveNodesCreated = sumNodesCreated / 100
@@ -333,13 +359,16 @@ class introAi:
             aveNumCitiesInSolution = sumNumberCitiesVisitedInSolution / 100
             averageNumBranches = sumAverageBranches / 100
             aveLengthOfSolution = sumLengthOfSolution / 100
+            aveNumNodesInMemory = sumNumberNodesInMemory / 100
 
             print (' ')
-            print ('Statistics for A* using h(n)=0 Heuristic')
+            print ('Statistics for A* using h(n) = 0 constant Heuristic')
 
             print('Average number of branches: ', averageNumBranches)
             print('Average Nodes Visited: ', aveNodesVisited)
             print('Average Nodes Created: ', aveNodesCreated)
+            print('Average Number of Nodes in Memory: ', aveNumNodesInMemory)
+
             print('Average Number Of Cities In Solution: ', aveNumCitiesInSolution)
             print('Average Length of Solution Distance: ', aveLengthOfSolution)
 

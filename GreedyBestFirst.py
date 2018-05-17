@@ -1,6 +1,8 @@
 import math
 from SearchTreeNode import SearchTreeNode
 import queue
+from random import *
+
 class stateTuple(object):
     def __init__(self, priority, state):
         self.priority = priority
@@ -108,38 +110,50 @@ class GreedyBestFirst:
         return []
 
     def greedyBestFirstSearchNoHeuristic(self):
-            self.allActionsTaken = []
-            self.searchSolution = []
-            self.solutionFound = False
-            visited = []
-            startNode = SearchTreeNode(self.startCity, self.cityLocations[self.startCity], False,
-                                       self.mappingCitiesToConnectedNeighbours[self.startCity])
-            stack = [startNode]
-            self.numberOfNodesCreated = 1
-            self.numberOfCitiesVisited = 0
-            self.maxNumberOfNodesInMemory = 0
+        nodeAlreadyCreated = {
+            'A': False, 'B': False, 'C': False, 'D': False, 'E': False, 'F': False,
+            'G': False, 'H': False, 'I': False, 'J': False, 'K': False, 'L': False,
+            'M': False, 'N': False, 'O': False, 'P': False, 'Q': False, 'R': False,
+            'S': False, 'T': False, 'U': False, 'V': False, 'W': False, 'X': False,
+            'Y': False, 'Z': False
+        }
+        self.allActionsTaken = []
+        self.searchSolution = []
+        self.solutionFound = False
+        visited = []
+        startNode = SearchTreeNode(self.startCity, self.cityLocations[self.startCity], False,
+                                   self.mappingCitiesToConnectedNeighbours[self.startCity])
+        stack = [startNode]
+        self.numberOfNodesCreated = 1
+        self.numberOfCitiesVisited = 0
+        self.maxNumberOfNodesInMemory = 0
 
-            while stack:
-                city = stack.pop()
-                cityName = city.getName()
-                if self.maxNumberOfNodesInMemory < len(stack):
-                    self.maxNumberOfNodesInMemory = len(stack)
-                if city.getParent():
-                    self.allActionsTaken.append([cityName, city.getParent().getCity()])
-                if cityName == self.goalCity:
-                    self.processGoal(cityName, city.getParent())
-                    return self.searchSolution
-                if cityName not in visited:
-                    visited.append(cityName)
-                    self.numberOfCitiesVisited += 1
-                    cityNeighbours = city.getNeighbours()
-                    for neighbour in cityNeighbours:
+        while stack:
+            shuffle(stack)
+
+            city = stack.pop()
+            cityName = city.getName()
+            if self.maxNumberOfNodesInMemory < len(stack):
+                self.maxNumberOfNodesInMemory = len(stack)
+            if city.getParent():
+                self.allActionsTaken.append([cityName, city.getParent().getCity()])
+            if cityName == self.goalCity:
+                self.processGoal(cityName, city.getParent())
+                return self.searchSolution
+            if cityName not in visited:
+                visited.append(cityName)
+                self.numberOfCitiesVisited += 1
+                cityNeighbours = city.getNeighbours()
+                for neighbour in cityNeighbours:
+                    if not nodeAlreadyCreated[neighbour]:
                         if neighbour not in visited:
                             newNode = SearchTreeNode(neighbour, self.cityLocations[neighbour], city,
                                                      self.mappingCitiesToConnectedNeighbours[neighbour])
                             stack.append(newNode)
+                            nodeAlreadyCreated[neighbour] = True
+
                             self.numberOfNodesCreated += 1
-            return []
+        return []
 
 
     def greedyBestFirstSearchManhattan(self):
